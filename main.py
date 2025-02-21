@@ -1,25 +1,38 @@
 import pygame
+from pygame.locals import *
 
 
-def main():
-    pygame.init()
-    screen = pygame.display.set_mode((1280, 720))
-    clock = pygame.time.Clock()
-    running = True
-
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        screen.fill("purple")
-
-        pygame.display.flip()
-
-        clock.tick(60)
-
-    pygame.quit()
+def handle_input(e: pygame.event.Event):
+    pass
+    # match e.type:
 
 
-if __name__ == "__main__":
-    main()
+
+#####################################
+# Game loop should look like this:  #
+# handleInput()                     #
+# updateStates()                    #
+# render()                          #
+#####################################
+
+
+pygame.init()
+screen = pygame.display.set_mode((1280, 720))
+clock = pygame.time.Clock()
+font = pygame.font.SysFont('Arial', 30)
+running = True
+
+while running:
+    # handle input
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+        handle_input(event)
+
+    # render
+    pygame.display.flip()
+
+    clock.tick(60)
+
+pygame.quit()
