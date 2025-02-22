@@ -31,8 +31,25 @@ class HandTest(unittest.TestCase):
         card2 = Card(Suit.SPADE, Rank.KING)
         hand.add_card(card).add_card(card2)
         expected = "seven of diamonds, king of spades"
-        self.assertEqual(expected, str(hand), "String representation should match the expected output: '{rank} of {"
-                                              "suit}s, {rank} of {suit}s, ...'")
+        self.assertEqual(expected, str(hand), "String representation should match the expected output: '{rank} of {suit}s, {rank} of {suit}s, ...'")
+
+    def test_empty(self):
+        hand = Hand()
+        hand.add_card(Card(Suit.DIAMOND, Rank.SEVEN))
+        hand.add_card(Card(Suit.SPADE, Rank.KING))
+        hand.empty()
+        self.assertEqual(len(hand._cards), 0, "Hand should be empty after emptying hand.")
+
+    def test_is_empty_with_cards_in_hand(self):
+        hand = Hand()
+        card = Card(Suit.DIAMOND, Rank.SEVEN)
+        card2 = Card(Suit.SPADE, Rank.KING)
+        hand.add_card(card).add_card(card2)
+        self.assertFalse(hand.is_empty(), "Hand should not be empty with cards in it.")
+
+    def test_is_empty_with_no_cards_in_hand(self):
+        hand = Hand()
+        self.assertTrue(hand.is_empty(), "Hand should be empty with no cards in it.")
 
 
 if __name__ == '__main__':
