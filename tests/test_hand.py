@@ -6,7 +6,7 @@ from src.enums.Suit import Suit
 from src.enums.Rank import Rank
 
 
-class HandTest(unittest.TestCase):
+class TestHand(unittest.TestCase):
     def test_initial_hand_is_empty(self):
         hand = Hand()
         self.assertEqual(len(hand._cards), 0, "Hand should start empty.")

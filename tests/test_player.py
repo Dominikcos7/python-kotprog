@@ -18,7 +18,7 @@ def init_player_with_cards_in_hand() -> Player:
     return player
 
 
-class PlayerTest(unittest.TestCase):
+class TestPlayer(unittest.TestCase):
     def setUp(self):
         self.player = init_player()
 

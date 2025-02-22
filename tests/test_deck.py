@@ -6,7 +6,7 @@ from src.enums.Rank import Rank
 from src.enums.Suit import Suit
 
 
-class DeckTest(unittest.TestCase):
+class TestDeck(unittest.TestCase):
     def test_init_deck_content(self):
         deck = Deck()
         expected = []

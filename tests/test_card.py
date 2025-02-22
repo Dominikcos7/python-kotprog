@@ -5,7 +5,7 @@ from src.enums.Suit import Suit
 from src.enums.Rank import Rank
 
 
-class CardTest(unittest.TestCase):
+class TestCard(unittest.TestCase):
     def test_string_representation(self):
         card = Card(Suit.SPADE, Rank.ACE)
         expected = "ace of spades"
