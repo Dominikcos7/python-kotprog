@@ -78,6 +78,51 @@ class TestTable(unittest.TestCase):
             cards_count = len(player.hand.cards)
             self.assertTrue(cards_count == 0 or cards_count == 5, "Every player should have 0 (if folded) or 5 cards in their hands at flop.")
 
+    def test_enter_state_turn(self):
+        for player in self.table.players:
+            player.hand.add_card(self.table.deck.draw()).add_card(self.table.deck.draw())
+            player.hand.add_card(self.table.deck.draw()).add_card(self.table.deck.draw())
+            player.hand.add_card(self.table.deck.draw())
+
+        self.table.state = TableState.INIT_ROUND
+        self.assertRaises(ValueError, self.table.enter_state, TableState.TURN)
+        self.table.state = TableState.PRE_FLOP
+        self.assertRaises(ValueError, self.table.enter_state, TableState.TURN)
+        self.table.state = TableState.TURN
+        self.assertRaises(ValueError, self.table.enter_state, TableState.TURN)
+        self.table.state = TableState.RIVER
+        self.assertRaises(ValueError, self.table.enter_state, TableState.TURN)
+        self.table.state = TableState.CLOSE_ROUND
+        self.assertRaises(ValueError, self.table.enter_state, TableState.TURN)
+
+        self.table.state = TableState.FLOP
+        for player in self.table.players:
+            player.put_chips_on_table(100)
+
+        self.table.players[0].put_chips_on_table(100)
+        # raise error if every player who hasn't folded hasn't called the highest bid
+        self.assertRaises(ValueError, self.table.enter_state, TableState.TURN)
+
+        for player in self.table.players[1:]:
+            player.action_fold()
+        # raise error if only one player hasn't folded (the round is over)
+        self.assertRaises(ValueError, self.table.enter_state, TableState.TURN)
+
+        for player in self.table.players:
+            player.action_fold()
+            player.hand.add_card(self.table.deck.draw()).add_card(self.table.deck.draw())
+            player.hand.add_card(self.table.deck.draw()).add_card(self.table.deck.draw())
+            player.hand.add_card(self.table.deck.draw())
+            player.chips = 1000
+            player.chips_on_table = 0
+            player.put_chips_on_table(100)
+
+        self.table.enter_state(TableState.TURN)
+
+        for player in self.table.players:
+            cards_count = len(player.hand.cards)
+            self.assertTrue(cards_count == 0 or cards_count == 6, "Every player should have 0 (if folded) or 6 cards in their hands at turn.")
+
 
 if __name__ == '__main__':
     unittest.main()

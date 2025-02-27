@@ -15,7 +15,8 @@ class Table:
         self.deck = Deck()
         self.deck.shuffle()
 
-    def every_player_called(self, amount: int) -> bool:
+    def every_player_called(self) -> bool:
+        amount = self.get_highest_bid()
         for player in self.get_not_folded_players():
             if player.chips_on_table != amount:
                 return False
@@ -40,8 +41,7 @@ class Table:
                 if self.state != TableState.PRE_FLOP:
                     raise ValueError("Flop state can only be entered from pre-flop state.")
 
-                call_amount = self.get_highest_bid()
-                if not self.every_player_called(call_amount):
+                if not self.every_player_called():
                     raise ValueError("Flop state can only be entered if every player called.")
 
                 not_folded_players = self.get_not_folded_players()
@@ -49,6 +49,19 @@ class Table:
                     raise ValueError("Flop state can only be entered if at least two players haven't folded.")
 
                 self.flop()
+
+            case TableState.TURN:
+                if self.state != TableState.FLOP:
+                    raise ValueError("Turn state can only be entered from flop state.")
+
+                if not self.every_player_called():
+                    raise ValueError("Turn state can only be entered if every player called.")
+
+                not_folded_players = self.get_not_folded_players()
+                if len(not_folded_players) <= 1:
+                    raise ValueError("Turn state can only be entered if at least two players haven't folded.")
+
+                self.turn()
 
     def flop(self):
         flop = [self.deck.draw(), self.deck.draw(), self.deck.draw()]
@@ -79,3 +92,8 @@ class Table:
 
         big_blind = self.players[1]
         big_blind.put_chips_on_table(self.big_blind)
+
+    def turn(self):
+        turn = self.deck.draw()
+        for player in self.get_not_folded_players():
+            player.hand.add_card(turn)
