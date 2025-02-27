@@ -63,6 +63,19 @@ class Table:
 
                 self.turn()
 
+            case TableState.RIVER:
+                if self.state != TableState.TURN:
+                    raise ValueError("River state can only be entered from turn state.")
+
+                if not self.every_player_called():
+                    raise ValueError("River state can only be entered if every player called.")
+
+                not_folded_players = self.get_not_folded_players()
+                if len(not_folded_players) <= 1:
+                    raise ValueError("River state can only be entered if at least two players haven't folded.")
+
+                self.river()
+
     def flop(self):
         flop = [self.deck.draw(), self.deck.draw(), self.deck.draw()]
 
@@ -92,6 +105,11 @@ class Table:
 
         big_blind = self.players[1]
         big_blind.put_chips_on_table(self.big_blind)
+
+    def river(self):
+        river = self.deck.draw()
+        for player in self.players:
+            player.hand.add_card(river)
 
     def turn(self):
         turn = self.deck.draw()
