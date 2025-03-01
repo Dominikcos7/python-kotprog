@@ -167,7 +167,7 @@ class TestTable(unittest.TestCase):
         for player in self.table.players:
             cards_count = len(player.hand.cards)
             self.assertTrue(cards_count == 0 or cards_count == 7,
-                            "Every player should have 0 (if folded) or 7 cards in their hands at turn.")
+                            "Every player should have 0 (if folded) or 7 cards in their hands at river.")
 
 
 if __name__ == '__main__':
