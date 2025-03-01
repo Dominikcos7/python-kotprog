@@ -6,14 +6,10 @@ from src.enums.TableState import TableState
 class Table:
     def __init__(self, players: list[Player], blind: int):
         self.players = players
-
         self.state = TableState.INIT_ROUND
-
         self.small_blind = blind // 2
         self.big_blind = blind
-
-        self.deck = Deck()
-        self.deck.shuffle()
+        self.deck = self.init_deck()
 
     def every_player_called(self) -> bool:
         amount = self.get_highest_bid()
@@ -23,7 +19,7 @@ class Table:
 
         return True
 
-    def deal_cards_to_players(self):
+    def deal_cards_to_players(self) -> None:
         for player in self.players:
             player.hand.add_card(self.deck.draw()).add_card(self.deck.draw())
 
@@ -76,14 +72,45 @@ class Table:
 
                 self.river()
 
-    def flop(self):
+            case TableState.CLOSE_ROUND:
+                if self.state == TableState.INIT_ROUND:
+                    raise ValueError("Close round state cannot be entered from init round state.")
+
+                not_folded_players = self.get_not_folded_players()
+                if self.state != TableState.RIVER and len(not_folded_players) > 1:
+                    raise ValueError(
+                        "Close round state cannot be entered if table is in river state and more than one player haven't folded.")
+
+                if self.state == TableState.RIVER and len(not_folded_players) > 1 and not self.every_player_called():
+                    raise ValueError(
+                        "Close round state cannot be entered if table is in river state, more than one player haven't folded and not everyone has called the largest bid.")
+
+                winner = self.find_winner()
+                winner.chips += self.get_all_chips_on_table()
+                self.fold_all_players()
+                self.init_deck()
+
+    def find_winner(self) -> "Player":
+        not_folded_players = self.get_not_folded_players()
+        winner = not_folded_players[0]
+        for player in not_folded_players[1:]:
+            if player.hand.evaluate() > winner.hand.evaluate():
+                winner = player
+
+        return winner
+
+    def flop(self) -> None:
         flop = [self.deck.draw(), self.deck.draw(), self.deck.draw()]
 
         for player in self.get_not_folded_players():
             for card in flop:
                 player.hand.add_card(card)
 
-    def get_highest_bid(self):
+    def fold_all_players(self) -> None:
+        for player in self.players:
+            player.action_fold()
+
+    def get_highest_bid(self) -> int:
         players = self.get_not_folded_players()
         bid = players[0].chips_on_table
         for player in players[1:]:
@@ -99,19 +126,25 @@ class Table:
 
         return ret
 
-    def put_blinds_in(self):
+    def get_all_chips_on_table(self) -> int:
+        return sum(player.chips_on_table for player in self.players)
+
+    def put_blinds_in(self) -> None:
         small_blind = self.players[0]
         small_blind.put_chips_on_table(self.small_blind)
 
         big_blind = self.players[1]
         big_blind.put_chips_on_table(self.big_blind)
 
-    def river(self):
+    def init_deck(self) -> "Deck":
+        return Deck().shuffle()
+
+    def river(self) -> None:
         river = self.deck.draw()
         for player in self.players:
             player.hand.add_card(river)
 
-    def turn(self):
+    def turn(self) -> None:
         turn = self.deck.draw()
         for player in self.get_not_folded_players():
             player.hand.add_card(turn)

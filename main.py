@@ -6,6 +6,9 @@ def handle_input(e: pygame.event.Event):
     pass
     # match e.type:
 
+def update():
+    pass
+
 
 
 #####################################
@@ -29,6 +32,9 @@ while running:
             running = False
 
         handle_input(event)
+
+    #update
+    update()
 
     # render
     pygame.display.flip()

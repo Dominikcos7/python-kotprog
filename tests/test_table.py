@@ -169,6 +169,25 @@ class TestTable(unittest.TestCase):
             self.assertTrue(cards_count == 0 or cards_count == 7,
                             "Every player should have 0 (if folded) or 7 cards in their hands at river.")
 
+    def test_enter_state_close_round(self):
+        self.table.state = TableState.INIT_ROUND
+        self.assertRaises(ValueError, self.table.enter_state, TableState.CLOSE_ROUND)
+
+        self.table.state = TableState.PRE_FLOP
+        for player in self.table.players:
+            player.hand.add_card(self.table.deck.draw()).add_card(self.table.deck.draw())
+
+        # raise error if more than one player haven't folded and table is not after river
+        self.assertRaises(ValueError, self.table.enter_state, TableState.CLOSE_ROUND)
+
+        self.table.state = TableState.RIVER
+        for player in self.table.players:
+            player.put_chips_on_table(100)
+
+        self.table.players[0].put_chips_on_table(100)
+        # raise error if table is after river, more than one player haven't folded and not everyone has called
+        self.assertRaises(ValueError, self.table.enter_state, TableState.CLOSE_ROUND)
+
 
 if __name__ == '__main__':
     unittest.main()

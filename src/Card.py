@@ -1,5 +1,6 @@
 from src.enums.Suit import Suit
 from src.enums.Rank import Rank
+from treys import Card as tCard
 
 
 class Card:
@@ -15,3 +16,6 @@ class Card:
 
     def __str__(self) -> str:
         return str(self._rank) + " of " + str(self._suit) + "s"
+
+    def as_treys_card(self) -> int:
+        return tCard.new(self._rank.as_treys_rank() + self._suit.as_treys_suit())
