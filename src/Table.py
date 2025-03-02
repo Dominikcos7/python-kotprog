@@ -19,19 +19,34 @@ class Table:
 
         return True
 
-    def deal_cards_to_players(self) -> None:
+    def deal_community_cards(self, amount: int) -> None:
+        cards = [self.deck.draw() for _ in range(amount)]
+        for player in self.get_not_folded_players():
+            for card in cards:
+                player.hand.add_card(card)
+
+    def deal_pocket_cards(self) -> None:
         for player in self.players:
             player.hand.add_card(self.deck.draw()).add_card(self.deck.draw())
 
-    def enter_state(self, state: TableState):
+    def enter_state(self, state: TableState) -> None:
         match state:
             case TableState.INIT_ROUND:
-                pass
+                if self.state != TableState.CLOSE_ROUND:
+                    raise ValueError("Init round state can only be entered from close round state.")
+
+                not_folded_players = self.get_not_folded_players()
+                if len(not_folded_players) > 0:
+                    raise ValueError("Init round state cannot be entered if any player has a card.")
+
+                self.deck = self.init_deck()
+                self.shift_players()
+
             case TableState.PRE_FLOP:
                 if self.state != TableState.INIT_ROUND:
                     raise ValueError("Pre-flop state can only be entered from init round state.")
 
-                self.deal_cards_to_players()
+                self.deal_pocket_cards()
                 self.put_blinds_in()
             case TableState.FLOP:
                 if self.state != TableState.PRE_FLOP:
@@ -44,7 +59,7 @@ class Table:
                 if len(not_folded_players) <= 1:
                     raise ValueError("Flop state can only be entered if at least two players haven't folded.")
 
-                self.flop()
+                self.deal_community_cards(3)
 
             case TableState.TURN:
                 if self.state != TableState.FLOP:
@@ -57,7 +72,7 @@ class Table:
                 if len(not_folded_players) <= 1:
                     raise ValueError("Turn state can only be entered if at least two players haven't folded.")
 
-                self.turn()
+                self.deal_community_cards(1)
 
             case TableState.RIVER:
                 if self.state != TableState.TURN:
@@ -70,7 +85,7 @@ class Table:
                 if len(not_folded_players) <= 1:
                     raise ValueError("River state can only be entered if at least two players haven't folded.")
 
-                self.river()
+                self.deal_community_cards(1)
 
             case TableState.CLOSE_ROUND:
                 if self.state == TableState.INIT_ROUND:
@@ -88,7 +103,6 @@ class Table:
                 winner = self.find_winner()
                 winner.chips += self.get_all_chips_on_table()
                 self.fold_all_players()
-                self.init_deck()
 
     def find_winner(self) -> "Player":
         not_folded_players = self.get_not_folded_players()
@@ -98,13 +112,6 @@ class Table:
                 winner = player
 
         return winner
-
-    def flop(self) -> None:
-        flop = [self.deck.draw(), self.deck.draw(), self.deck.draw()]
-
-        for player in self.get_not_folded_players():
-            for card in flop:
-                player.hand.add_card(card)
 
     def fold_all_players(self) -> None:
         for player in self.players:
@@ -129,6 +136,9 @@ class Table:
     def get_all_chips_on_table(self) -> int:
         return sum(player.chips_on_table for player in self.players)
 
+    def init_deck(self) -> "Deck":
+        return Deck().shuffle()
+
     def put_blinds_in(self) -> None:
         small_blind = self.players[0]
         small_blind.put_chips_on_table(self.small_blind)
@@ -136,15 +146,5 @@ class Table:
         big_blind = self.players[1]
         big_blind.put_chips_on_table(self.big_blind)
 
-    def init_deck(self) -> "Deck":
-        return Deck().shuffle()
-
-    def river(self) -> None:
-        river = self.deck.draw()
-        for player in self.players:
-            player.hand.add_card(river)
-
-    def turn(self) -> None:
-        turn = self.deck.draw()
-        for player in self.get_not_folded_players():
-            player.hand.add_card(turn)
+    def shift_players(self):
+        self.players.append(self.players.pop(0))

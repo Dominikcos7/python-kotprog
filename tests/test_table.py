@@ -127,7 +127,7 @@ class TestTable(unittest.TestCase):
         for player in self.table.players:
             player.hand.add_card(self.table.deck.draw()).add_card(self.table.deck.draw())
             player.hand.add_card(self.table.deck.draw()).add_card(self.table.deck.draw())
-            player.hand.add_card(self.table.deck.draw()).add_card(self.table.deck.draw())
+            player.hand.add_card(self.table.deck.draw())
 
         self.table.state = TableState.INIT_ROUND
         self.assertRaises(ValueError, self.table.enter_state, TableState.RIVER)
@@ -187,6 +187,36 @@ class TestTable(unittest.TestCase):
         self.table.players[0].put_chips_on_table(100)
         # raise error if table is after river, more than one player haven't folded and not everyone has called
         self.assertRaises(ValueError, self.table.enter_state, TableState.CLOSE_ROUND)
+
+    def test_enter_state_init_round(self):
+        self.table.state = TableState.INIT_ROUND
+        self.assertRaises(ValueError, self.table.enter_state, TableState.INIT_ROUND)
+        self.table.state = TableState.PRE_FLOP
+        self.assertRaises(ValueError, self.table.enter_state, TableState.INIT_ROUND)
+        self.table.state = TableState.FLOP
+        self.assertRaises(ValueError, self.table.enter_state, TableState.INIT_ROUND)
+        self.table.state = TableState.RIVER
+        self.assertRaises(ValueError, self.table.enter_state, TableState.INIT_ROUND)
+        self.table.state = TableState.TURN
+        self.assertRaises(ValueError, self.table.enter_state, TableState.INIT_ROUND)
+
+        self.table.state = TableState.CLOSE_ROUND
+        self.table.players[0].hand.add_card(self.table.deck.draw())
+        # raise error if any player has cards in their hands
+        self.assertRaises(ValueError, self.table.enter_state, TableState.INIT_ROUND)
+
+        self.table.players[0].action_fold()
+        small_blind = self.table.players[0]
+        next_small_blind = self.table.players[1]
+        self.table.enter_state(TableState.INIT_ROUND)
+
+        expected_deck_len = 52
+        actual_deck_len = len(self.table.deck.cards)
+        self.assertEqual(expected_deck_len, actual_deck_len, "Deck should be reset after init round.")
+
+        expected_small_blind = next_small_blind
+        actual_small_blind = self.table.players[0]
+        self.assertEqual(expected_small_blind, actual_small_blind, "Players should be rotated after init round.")
 
 
 if __name__ == '__main__':
