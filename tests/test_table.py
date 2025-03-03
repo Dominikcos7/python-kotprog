@@ -206,7 +206,6 @@ class TestTable(unittest.TestCase):
         self.assertRaises(ValueError, self.table.enter_state, TableState.INIT_ROUND)
 
         self.table.players[0].action_fold()
-        small_blind = self.table.players[0]
         next_small_blind = self.table.players[1]
         self.table.enter_state(TableState.INIT_ROUND)
 

@@ -6,9 +6,9 @@ def handle_input(e: pygame.event.Event):
     pass
     # match e.type:
 
+
 def update():
     pass
-
 
 
 #####################################
@@ -33,7 +33,7 @@ while running:
 
         handle_input(event)
 
-    #update
+    # update
     update()
 
     # render
