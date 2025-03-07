@@ -19,3 +19,11 @@ class Card:
 
     def as_treys_card(self) -> int:
         return tCard.new(self._rank.as_treys_rank() + self._suit.as_treys_suit())
+
+    @property
+    def rank(self) -> Rank:
+        return self._rank
+
+    @property
+    def suit(self) -> Suit:
+        return self._suit
