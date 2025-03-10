@@ -2,13 +2,14 @@ import pygame
 from pygame import Surface
 
 from src.Card import Card
+from src.Renderer import Renderer
 from src.enums.Rank import Rank
 from src.enums.Suit import Suit
 
 
-class CardRenderer:
+class CardRenderer(Renderer):
     def __init__(self, screen: Surface):
-        self.screen = screen
+        super().__init__(screen)
         self.sprite = pygame.image.load('./src/img/cards.png')
         self.card_width_px = 48
         self.card_height_px = 64
