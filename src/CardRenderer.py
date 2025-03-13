@@ -61,3 +61,10 @@ class CardRenderer(Renderer):
             x, y = self.player_id_to_position_map[player_id]
             self.render_card(card, (x + offset, y))
             offset += self.w
+
+    def render_table_cards(self, cards: list[Card], card_number: int = 0) -> None:
+        x = self.x + 170 + self.w
+        y = self.y + 150
+        for card in cards:
+            self.render_card(card, (x + card_number * self.w, y))
+            card_number += 1
