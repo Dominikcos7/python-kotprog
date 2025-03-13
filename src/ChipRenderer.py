@@ -5,11 +5,15 @@ from src.Renderer import Renderer
 
 
 class ChipRenderer(Renderer):
+    SCALE = 0.5
+
     def __init__(self, screen: Surface):
         super().__init__(screen)
         self.sprite = pygame.image.load('./src/img/chips.png')
-        self.chip_width_px = 46
-        self.chip_height_px = 48
+        w, h = self.sprite.get_size()[0] * self.SCALE, self.sprite.get_size()[1] * self.SCALE
+        self.sprite = pygame.transform.scale(self.sprite, (w, h))
+        self.chip_width_px = 46 * self.SCALE
+        self.chip_height_px = 48 * self.SCALE
         self.chip_values = [200, 100, 50, 20, 10, 5, 2, 1]
         self.row_number_by_value_map = {
             1: 0,
@@ -58,10 +62,6 @@ class ChipRenderer(Renderer):
         for chip_value, count in result.items():
             col_offset = self.get_col_offset_by_count(count)
             col = self.col_number_by_value_map[chip_value] + col_offset
-            print('value: ', chip_value)
-            print('count: ', count)
-            print('col: ', col)
-            print('col-offset: ', col_offset)
             row = self.row_number_by_value_map[chip_value]
             chips = self.sprite.subsurface(pygame.Rect(col * self.chip_width_px, row * self.chip_height_px, self.chip_width_px, self.chip_height_px))
             self.screen.blit(chips, (position[0] + offset * self.chip_width_px, position[1]))
