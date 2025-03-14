@@ -217,6 +217,18 @@ class TestTable(unittest.TestCase):
         actual_small_blind = self.table.players[0]
         self.assertEqual(expected_small_blind, actual_small_blind, "Players should be rotated after init round.")
 
+    def test_collect_pot(self):
+        amount = 0
+        for player in self.table.players:
+            player.put_chips_on_table(100)
+            amount += 100
+
+        self.table.collect_pot()
+        expected = amount
+        actual = self.table.pot
+
+        self.assertEqual(expected, actual, "Table should have money in pot after collecting it.")
+
 
 if __name__ == '__main__':
     unittest.main()

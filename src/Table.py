@@ -10,6 +10,12 @@ class Table:
         self.small_blind = blind // 2
         self.big_blind = blind
         self.deck = self.init_deck()
+        self.pot = 0
+
+    def collect_pot(self) -> None:
+        for player in self.players:
+            self.pot += player.chips_on_table
+            player.chips_on_table = 0
 
     def every_player_called(self) -> bool:
         amount = self.get_highest_bid()
@@ -59,6 +65,7 @@ class Table:
                 if len(not_folded_players) <= 1:
                     raise ValueError("Flop state can only be entered if at least two players haven't folded.")
 
+                self.collect_pot()
                 self.deal_community_cards(3)
 
             case TableState.TURN:
@@ -72,6 +79,7 @@ class Table:
                 if len(not_folded_players) <= 1:
                     raise ValueError("Turn state can only be entered if at least two players haven't folded.")
 
+                self.collect_pot()
                 self.deal_community_cards(1)
 
             case TableState.RIVER:
@@ -85,6 +93,7 @@ class Table:
                 if len(not_folded_players) <= 1:
                     raise ValueError("River state can only be entered if at least two players haven't folded.")
 
+                self.collect_pot()
                 self.deal_community_cards(1)
 
             case TableState.CLOSE_ROUND:
@@ -100,8 +109,9 @@ class Table:
                     raise ValueError(
                         "Close round state cannot be entered if table is in river state, more than one player haven't folded and not everyone has called the largest bid.")
 
+                self.collect_pot()
                 winner = self.find_winner()
-                winner.chips += self.get_all_chips_on_table()
+                winner.chips += self.pot
                 self.fold_all_players()
 
     def find_winner(self) -> "Player":
@@ -132,9 +142,6 @@ class Table:
                 ret.append(player)
 
         return ret
-
-    def get_all_chips_on_table(self) -> int:
-        return sum(player.chips_on_table for player in self.players)
 
     def init_deck(self) -> "Deck":
         return Deck().shuffle()
