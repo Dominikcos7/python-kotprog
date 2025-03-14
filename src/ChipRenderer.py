@@ -61,7 +61,7 @@ class ChipRenderer(Renderer):
 
     def render_chips(self, amount: int, position: tuple[float, float]) -> None:
         if amount < 1:
-            raise ValueError("ChipRenderer cannot render less than one chip.")
+            return
 
         result = {}
         for chip_value in self.chip_values:

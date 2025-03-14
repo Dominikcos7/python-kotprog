@@ -11,6 +11,7 @@ class Table:
         self.big_blind = blind
         self.deck = self.init_deck()
         self.pot = 0
+        self.community_cards = []
 
     def collect_pot(self) -> None:
         for player in self.players:
@@ -27,6 +28,8 @@ class Table:
 
     def deal_community_cards(self, amount: int) -> None:
         cards = [self.deck.draw() for _ in range(amount)]
+        self.community_cards.append(card for card in cards)
+
         for player in self.get_not_folded_players():
             for card in cards:
                 player.hand.add_card(card)
