@@ -62,9 +62,13 @@ class TestTable(unittest.TestCase):
 
         for player in self.table.players[1:]:
             player.action_fold()
-        # raise error if only one player hasn't folded (the round is over)
-        self.assertRaises(ValueError, self.table.enter_state, TableState.FLOP)
+        # enter close round state if only one player hasn't folded (the round is over)
+        self.table.enter_state(TableState.FLOP)
+        expected = TableState.CLOSE_ROUND
+        actual = self.table.state
+        self.assertEqual(expected, actual, "Table should enter close round state if only one player hasn't folded.")
 
+        self.table.state = TableState.PRE_FLOP
         for player in self.table.players:
             player.action_fold()
             player.hand.add_card(self.table.deck.draw()).add_card(self.table.deck.draw())
@@ -105,9 +109,13 @@ class TestTable(unittest.TestCase):
 
         for player in self.table.players[1:]:
             player.action_fold()
-        # raise error if only one player hasn't folded (the round is over)
-        self.assertRaises(ValueError, self.table.enter_state, TableState.TURN)
+        # enter close round state if only one player hasn't folded (the round is over)
+        self.table.enter_state(TableState.TURN)
+        expected = TableState.CLOSE_ROUND
+        actual = self.table.state
+        self.assertEqual(expected, actual, "Table should enter close round state if only one player hasn't folded.")
 
+        self.table.state = TableState.FLOP
         for player in self.table.players:
             player.action_fold()
             player.hand.add_card(self.table.deck.draw()).add_card(self.table.deck.draw())
@@ -150,9 +158,13 @@ class TestTable(unittest.TestCase):
 
         for player in self.table.players[1:]:
             player.action_fold()
-        # raise error if only one player hasn't folded (the round is over)
-        self.assertRaises(ValueError, self.table.enter_state, TableState.RIVER)
+        # enter close round state if only one player hasn't folded (the round is over)
+        self.table.enter_state(TableState.RIVER)
+        expected = TableState.CLOSE_ROUND
+        actual = self.table.state
+        self.assertEqual(expected, actual, "Table should enter close round state if only one player hasn't folded.")
 
+        self.table.state = TableState.TURN
         for player in self.table.players:
             player.action_fold()
             player.hand.add_card(self.table.deck.draw()).add_card(self.table.deck.draw())

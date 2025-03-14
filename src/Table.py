@@ -76,7 +76,8 @@ class Table:
 
                 not_folded_players = self.get_not_folded_players()
                 if len(not_folded_players) <= 1:
-                    raise ValueError("Flop state can only be entered if at least two players haven't folded.")
+                    self.enter_state(TableState.CLOSE_ROUND)
+                    return
 
                 self.state = TableState.FLOP
                 self.collect_pot()
@@ -92,7 +93,8 @@ class Table:
 
                 not_folded_players = self.get_not_folded_players()
                 if len(not_folded_players) <= 1:
-                    raise ValueError("Turn state can only be entered if at least two players haven't folded.")
+                    self.enter_state(TableState.CLOSE_ROUND)
+                    return
 
                 self.state = TableState.TURN
                 self.collect_pot()
@@ -108,7 +110,8 @@ class Table:
 
                 not_folded_players = self.get_not_folded_players()
                 if len(not_folded_players) <= 1:
-                    raise ValueError("River state can only be entered if at least two players haven't folded.")
+                    self.enter_state(TableState.CLOSE_ROUND)
+                    return
 
                 self.state = TableState.RIVER
                 self.collect_pot()

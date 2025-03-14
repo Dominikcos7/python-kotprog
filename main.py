@@ -29,6 +29,14 @@ def handle_input(e: pygame.event.Event):
                         print(ex)
                         table.bump_actor_idx()
 
+                case pygame.K_f:
+                    player.action_fold()
+                    try:
+                        table.enter_next_state()
+                    except ValueError as ex:
+                        print(ex)
+                        table.bump_actor_idx()
+
 
 
 
