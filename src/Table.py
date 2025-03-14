@@ -12,6 +12,7 @@ class Table:
         self.deck = self.init_deck()
         self.pot = 0
         self.community_cards = []
+        self.actor_idx = 2
 
     def collect_pot(self) -> None:
         for player in self.players:
@@ -57,6 +58,8 @@ class Table:
 
                 self.deal_pocket_cards()
                 self.put_blinds_in()
+                self.actor_idx = 2
+
             case TableState.FLOP:
                 if self.state != TableState.PRE_FLOP:
                     raise ValueError("Flop state can only be entered from pre-flop state.")
@@ -70,6 +73,7 @@ class Table:
 
                 self.collect_pot()
                 self.deal_community_cards(3)
+                self.actor_idx = 0
 
             case TableState.TURN:
                 if self.state != TableState.FLOP:
@@ -84,6 +88,7 @@ class Table:
 
                 self.collect_pot()
                 self.deal_community_cards(1)
+                self.actor_idx = 0
 
             case TableState.RIVER:
                 if self.state != TableState.TURN:
@@ -98,6 +103,7 @@ class Table:
 
                 self.collect_pot()
                 self.deal_community_cards(1)
+                self.actor_idx = 0
 
             case TableState.CLOSE_ROUND:
                 if self.state == TableState.INIT_ROUND:
@@ -129,6 +135,9 @@ class Table:
     def fold_all_players(self) -> None:
         for player in self.players:
             player.action_fold()
+
+    def get_acting_player(self) -> Player:
+        return self.players[self.actor_idx]
 
     def get_highest_bid(self) -> int:
         players = self.get_not_folded_players()
