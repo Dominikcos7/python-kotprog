@@ -2,7 +2,9 @@ from src.Hand import Hand
 
 
 class Player:
-    def __init__(self, name: str, chips: int):
+    def __init__(self, name: str, chips: int, player_id: int = 0, is_human: bool = False):
+        self.id = player_id
+        self.is_human = is_human
         self.chips = chips
         self.chips_on_table = 0
         self.hand = Hand()
