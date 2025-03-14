@@ -26,8 +26,10 @@ class Player:
         self.put_chips_on_table(call_amount)
         self.acted = True
 
-    def action_check(self):
-        # todo: implement
+    def action_check(self, highest_bid: int):
+        if self.chips_on_table < highest_bid:
+            raise ValueError("Cannot check if highest bid hasn't been called.")
+
         self.acted = True
 
     def action_fold(self):

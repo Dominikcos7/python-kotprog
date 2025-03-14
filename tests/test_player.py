@@ -119,6 +119,30 @@ class TestPlayer(unittest.TestCase):
     def test_raise_with_zero_amount(self):
         self.assertRaises(ValueError, self.player.action_raise, 0)
 
+    def test_check_if_there_is_bid_to_call(self):
+        highest_bid = 100
+        self.player.chips_on_table = 0
+        self.assertRaises(ValueError, self.player.action_check, highest_bid)
+
+    def test_check_does_not_fold(self):
+        player = init_player_with_cards_in_hand()
+        card_count = len(player.hand.cards)
+        self.player.action_check(0)
+        expected = card_count
+        actual = len(player.hand.cards)
+        self.assertEqual(expected, actual, "Check should not fold cards")
+
+    def test_check_does_not_put_money_on_table(self):
+        chip_count = self.player.chips_on_table
+        self.player.action_check(0)
+        expected = chip_count
+        actual = self.player.chips_on_table
+        self.assertEqual(expected, actual, "Check should not put money on table")
+
+    def test_check_should_set_acted_to_true(self):
+        self.player.action_check(0)
+        self.assertTrue(self.player.acted, "Player's acted field should be true after acting.")
+
 
 if __name__ == '__main__':
     unittest.main()

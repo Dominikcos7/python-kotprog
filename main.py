@@ -15,14 +15,27 @@ def handle_input(e: pygame.event.Event) -> bool:
     else:
         match e.key:
             case pygame.K_c:
-                bid = table.get_highest_bid()
-                amount = bid - acting_player.chips_on_table
-                acting_player.action_call(amount)
-                return True
+                try:
+                    bid = table.get_highest_bid()
+                    amount = bid - acting_player.chips_on_table
+                    acting_player.action_call(amount)
+                    return True
+                except ValueError as ex:
+                    print(ex)
+                    return False
 
             case pygame.K_f:
                 acting_player.action_fold()
                 return True
+
+            case pygame.K_p:
+                try:
+                    bid = table.get_highest_bid()
+                    acting_player.action_check(bid)
+                    return True
+                except ValueError as ex:
+                    print(ex)
+                    return False
 
             case _:
                 return False
