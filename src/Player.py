@@ -9,9 +9,11 @@ class Player:
         self.chips_on_table = 0
         self.hand = Hand()
         self.name = name
+        self.acted = False
 
     def action_all_in(self):
         self.put_chips_on_table(self.chips)
+        self.acted = True
 
     def action_call(self, amount: int):
         if amount <= 0:
@@ -22,12 +24,15 @@ class Player:
 
         call_amount = min(amount, self.chips)
         self.put_chips_on_table(call_amount)
+        self.acted = True
 
     def action_check(self):
-        pass
+        # todo: implement
+        self.acted = True
 
     def action_fold(self):
         self.hand.empty()
+        self.acted = True
 
     def action_raise(self, amount: int):
         if self.chips < amount:
@@ -40,6 +45,7 @@ class Player:
             raise ValueError("Raise amount must be larger than 0.")
 
         self.put_chips_on_table(amount)
+        self.acted = True
 
     def is_folded(self) -> bool:
         return self.hand.is_empty()

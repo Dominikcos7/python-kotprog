@@ -33,6 +33,7 @@ class TestPlayer(unittest.TestCase):
                          "Player should have {amount} less chips than before calling.")
         self.assertEqual(self.player.chips_on_table, chips_on_table_before_call + amount,
                          "Player should have {amount} more chips on table than before calling.")
+        self.assertTrue(self.player.acted, "Player's acted field should be true after acting.")
 
     def test_call_without_coverage(self):
         chips_before_call = self.player.chips
@@ -49,6 +50,7 @@ class TestPlayer(unittest.TestCase):
         player = init_player_with_cards_in_hand()
         player.action_fold()
         self.assertTrue(player.hand.is_empty())
+        self.assertTrue(player.acted, "Player's acted field should be true after acting.")
 
     def test_raise(self):
         chips_before_raise = self.player.chips
@@ -66,6 +68,7 @@ class TestPlayer(unittest.TestCase):
                          "Player should have {amount} less chips than before raise.")
         self.assertEqual(expected_chips_on_table_after_raise, actual_chips_on_table_after_raise,
                          "Player should have {amount} more chips on table than before raise.")
+        self.assertTrue(self.player.acted, "Player's acted field should be true after acting.")
 
     def test_raise_with_not_enough_chips_to_raise(self):
         amount = self.player.chips + 100
@@ -84,6 +87,7 @@ class TestPlayer(unittest.TestCase):
 
         self.assertEqual(expected_chips, actual_chips, "Player should have no chips left after all in.")
         self.assertEqual(expected_chips_on_table, actual_chips_on_table, "Player should have all their money on the table.")
+        self.assertTrue(self.player.acted, "Player's acted field should be true after acting.")
 
     def test_call_with_player_having_negative_chips(self):
         self.player.chips = -1
