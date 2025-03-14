@@ -41,6 +41,9 @@ class Player:
 
         self.put_chips_on_table(amount)
 
+    def is_folded(self) -> bool:
+        return self.hand.is_empty()
+
     def put_chips_on_table(self, amount: int):
         self.chips -= amount
         self.chips_on_table += amount

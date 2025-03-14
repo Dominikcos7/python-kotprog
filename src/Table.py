@@ -15,9 +15,15 @@ class Table:
         self.actor_idx = 2
 
     def bump_actor_idx(self) -> None:
+        if len(self.get_not_folded_players()) < 1:
+            return
+
         self.actor_idx += 1
         if self.actor_idx >= len(self.players):
             self.actor_idx = 0
+
+        if self.players[self.actor_idx].is_folded():
+            self.bump_actor_idx()
 
     def collect_pot(self) -> None:
         for player in self.players:
@@ -179,10 +185,7 @@ class Table:
         return bid
 
     def get_not_folded_players(self) -> list[Player]:
-        ret = []
-        for player in self.players:
-            if len(player.hand.cards) > 0:
-                ret.append(player)
+        ret = [player for player in self.players if not player.is_folded()]
 
         return ret
 
