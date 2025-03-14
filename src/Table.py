@@ -18,14 +18,6 @@ class Table:
             self.pot += player.chips_on_table
             player.chips_on_table = 0
 
-    def every_player_called(self) -> bool:
-        amount = self.get_highest_bid()
-        for player in self.get_not_folded_players():
-            if player.chips_on_table != amount:
-                return False
-
-        return True
-
     def deal_community_cards(self, amount: int) -> None:
         cards = [self.deck.draw() for _ in range(amount)]
         self.community_cards.append(card for card in cards)
@@ -37,6 +29,14 @@ class Table:
     def deal_pocket_cards(self) -> None:
         for player in self.players:
             player.hand.add_card(self.deck.draw()).add_card(self.deck.draw())
+
+    def every_player_called(self) -> bool:
+        amount = self.get_highest_bid()
+        for player in self.get_not_folded_players():
+            if player.chips_on_table != amount:
+                return False
+
+        return True
 
     def enter_state(self, state: TableState) -> None:
         match state:
