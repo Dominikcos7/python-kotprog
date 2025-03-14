@@ -55,6 +55,8 @@ class Table:
                     raise ValueError("Init round state cannot be entered if any player has a card.")
 
                 self.state = TableState.INIT_ROUND
+                self.pot = 0
+                self.community_cards = []
                 self.deck = self.init_deck()
                 self.shift_players()
 

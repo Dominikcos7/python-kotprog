@@ -69,7 +69,6 @@ for i in range(5):
     players.append(Player("player" + str(i), 100, i, True))
 
 table = Table(players, 2)
-table.enter_state(TableState.PRE_FLOP)
 
 running = True
 while running:
@@ -78,13 +77,16 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-        acting_player = table.get_acting_player()
-        if acting_player.is_human and handle_input(event):
-            try:
-                table.enter_next_state()
-            except ValueError as ex:
-                print(ex)
-                table.bump_actor_idx()
+        if table.state != TableState.INIT_ROUND and table.state != TableState.CLOSE_ROUND:
+            acting_player = table.get_acting_player()
+            if acting_player.is_human and handle_input(event):
+                try:
+                    table.enter_next_state()
+                except ValueError as ex:
+                    print(ex)
+                    table.bump_actor_idx()
+        else:
+            table.enter_next_state()
 
     # update
     update()
