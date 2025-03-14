@@ -1,11 +1,7 @@
-from random import randint
-
 import pygame
-from pygame.locals import *
 
 from src.CardRenderer import CardRenderer
 from src.ChipRenderer import ChipRenderer
-from src.Deck import Deck
 from src.Player import Player
 from src.PlayerRenderer import PlayerRenderer
 from src.Table import Table
@@ -13,31 +9,23 @@ from src.TableRenderer import TableRenderer
 from src.enums.TableState import TableState
 
 
-def handle_input(e: pygame.event.Event):
-    if e.type == pygame.KEYDOWN:
-        player = table.get_acting_player()
-        if player.is_human:
-            match e.key:
-                case pygame.K_c:
-                    bid = table.get_highest_bid()
-                    amount = bid - player.chips_on_table
-                    player.action_call(amount)
+def handle_input(e: pygame.event.Event) -> bool:
+    if e.type != pygame.KEYDOWN:
+        return False
+    else:
+        match e.key:
+            case pygame.K_c:
+                bid = table.get_highest_bid()
+                amount = bid - acting_player.chips_on_table
+                acting_player.action_call(amount)
+                return True
 
-                    try:
-                        table.enter_next_state()
-                    except ValueError as ex:
-                        print(ex)
-                        table.bump_actor_idx()
+            case pygame.K_f:
+                acting_player.action_fold()
+                return True
 
-                case pygame.K_f:
-                    player.action_fold()
-                    try:
-                        table.enter_next_state()
-                    except ValueError as ex:
-                        print(ex)
-                        table.bump_actor_idx()
-
-
+            case _:
+                return False
 
 
 def render_sprites():
@@ -90,7 +78,13 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-        handle_input(event)
+        acting_player = table.get_acting_player()
+        if acting_player.is_human and handle_input(event):
+            try:
+                table.enter_next_state()
+            except ValueError as ex:
+                print(ex)
+                table.bump_actor_idx()
 
     # update
     update()
