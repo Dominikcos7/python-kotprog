@@ -77,7 +77,9 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-        if table.state != TableState.INIT_ROUND and table.state != TableState.CLOSE_ROUND:
+        if table.state == TableState.INIT_ROUND or table.state == TableState.CLOSE_ROUND:
+            table.enter_next_state()
+        else:
             acting_player = table.get_acting_player()
             if acting_player.is_human and handle_input(event):
                 try:
@@ -85,8 +87,6 @@ while running:
                 except ValueError as ex:
                     print(ex)
                     table.bump_actor_idx()
-        else:
-            table.enter_next_state()
 
     # update
     update()
