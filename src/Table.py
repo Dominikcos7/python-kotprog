@@ -14,6 +14,11 @@ class Table:
         self.community_cards = []
         self.actor_idx = 2
 
+    def bump_actor_idx(self) -> None:
+        self.actor_idx += 1
+        if self.actor_idx >= len(self.players):
+            self.actor_idx = 0
+
     def collect_pot(self) -> None:
         for player in self.players:
             self.pot += player.chips_on_table
@@ -49,6 +54,7 @@ class Table:
                 if len(not_folded_players) > 0:
                     raise ValueError("Init round state cannot be entered if any player has a card.")
 
+                self.state = TableState.INIT_ROUND
                 self.deck = self.init_deck()
                 self.shift_players()
 
@@ -56,6 +62,7 @@ class Table:
                 if self.state != TableState.INIT_ROUND:
                     raise ValueError("Pre-flop state can only be entered from init round state.")
 
+                self.state = TableState.PRE_FLOP
                 self.deal_pocket_cards()
                 self.put_blinds_in()
                 self.actor_idx = 2
@@ -71,6 +78,7 @@ class Table:
                 if len(not_folded_players) <= 1:
                     raise ValueError("Flop state can only be entered if at least two players haven't folded.")
 
+                self.state = TableState.FLOP
                 self.collect_pot()
                 self.deal_community_cards(3)
                 self.actor_idx = 0
@@ -86,6 +94,7 @@ class Table:
                 if len(not_folded_players) <= 1:
                     raise ValueError("Turn state can only be entered if at least two players haven't folded.")
 
+                self.state = TableState.TURN
                 self.collect_pot()
                 self.deal_community_cards(1)
                 self.actor_idx = 0
@@ -101,6 +110,7 @@ class Table:
                 if len(not_folded_players) <= 1:
                     raise ValueError("River state can only be entered if at least two players haven't folded.")
 
+                self.state = TableState.RIVER
                 self.collect_pot()
                 self.deal_community_cards(1)
                 self.actor_idx = 0
@@ -118,10 +128,26 @@ class Table:
                     raise ValueError(
                         "Close round state cannot be entered if table is in river state, more than one player haven't folded and not everyone has called the largest bid.")
 
+                self.state = TableState.CLOSE_ROUND
                 self.collect_pot()
                 winner = self.find_winner()
                 winner.chips += self.pot
                 self.fold_all_players()
+
+    def enter_next_state(self) -> None:
+        match self.state:
+            case TableState.INIT_ROUND:
+                self.enter_state(TableState.PRE_FLOP)
+            case TableState.PRE_FLOP:
+                self.enter_state(TableState.FLOP)
+            case TableState.FLOP:
+                self.enter_state(TableState.TURN)
+            case TableState.TURN:
+                self.enter_state(TableState.RIVER)
+            case TableState.RIVER:
+                self.enter_state(TableState.CLOSE_ROUND)
+            case TableState.CLOSE_ROUND:
+                self.enter_state(TableState.INIT_ROUND)
 
     def find_winner(self) -> "Player":
         not_folded_players = self.get_not_folded_players()

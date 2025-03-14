@@ -14,7 +14,22 @@ from src.enums.TableState import TableState
 
 
 def handle_input(e: pygame.event.Event):
-    pass
+    if e.type == pygame.KEYDOWN:
+        player = table.get_acting_player()
+        if player.is_human:
+            match e.key:
+                case pygame.K_c:
+                    bid = table.get_highest_bid()
+                    amount = bid - player.chips_on_table
+                    player.action_call(amount)
+
+                    try:
+                        table.enter_next_state()
+                    except ValueError as ex:
+                        print(ex)
+                        table.bump_actor_idx()
+
+
 
 
 def render_sprites():
