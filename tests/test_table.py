@@ -54,22 +54,6 @@ class TestTable(unittest.TestCase):
 
         self.table.state = TableState.PRE_FLOP
         for player in self.table.players:
-            player.put_chips_on_table(100)
-
-        self.table.players[0].put_chips_on_table(100)
-        # raise error if every player who hasn't folded hasn't called the highest bid
-        self.assertRaises(ValueError, self.table.enter_state, TableState.FLOP)
-
-        for player in self.table.players[1:]:
-            player.action_fold()
-        # enter close round state if only one player hasn't folded (the round is over)
-        self.table.enter_state(TableState.FLOP)
-        expected = TableState.CLOSE_ROUND
-        actual = self.table.state
-        self.assertEqual(expected, actual, "Table should enter close round state if only one player hasn't folded.")
-
-        self.table.state = TableState.PRE_FLOP
-        for player in self.table.players:
             player.action_fold()
             player.hand.add_card(self.table.deck.draw()).add_card(self.table.deck.draw())
             player.chips = 1000
@@ -98,22 +82,6 @@ class TestTable(unittest.TestCase):
         self.assertRaises(ValueError, self.table.enter_state, TableState.TURN)
         self.table.state = TableState.CLOSE_ROUND
         self.assertRaises(ValueError, self.table.enter_state, TableState.TURN)
-
-        self.table.state = TableState.FLOP
-        for player in self.table.players:
-            player.put_chips_on_table(100)
-
-        self.table.players[0].put_chips_on_table(100)
-        # raise error if every player who hasn't folded hasn't called the highest bid
-        self.assertRaises(ValueError, self.table.enter_state, TableState.TURN)
-
-        for player in self.table.players[1:]:
-            player.action_fold()
-        # enter close round state if only one player hasn't folded (the round is over)
-        self.table.enter_state(TableState.TURN)
-        expected = TableState.CLOSE_ROUND
-        actual = self.table.state
-        self.assertEqual(expected, actual, "Table should enter close round state if only one player hasn't folded.")
 
         self.table.state = TableState.FLOP
         for player in self.table.players:
@@ -147,22 +115,6 @@ class TestTable(unittest.TestCase):
         self.assertRaises(ValueError, self.table.enter_state, TableState.RIVER)
         self.table.state = TableState.CLOSE_ROUND
         self.assertRaises(ValueError, self.table.enter_state, TableState.RIVER)
-
-        self.table.state = TableState.TURN
-        for player in self.table.players:
-            player.put_chips_on_table(100)
-
-        self.table.players[0].put_chips_on_table(100)
-        # raise error if every player who hasn't folded hasn't called the highest bid
-        self.assertRaises(ValueError, self.table.enter_state, TableState.RIVER)
-
-        for player in self.table.players[1:]:
-            player.action_fold()
-        # enter close round state if only one player hasn't folded (the round is over)
-        self.table.enter_state(TableState.RIVER)
-        expected = TableState.CLOSE_ROUND
-        actual = self.table.state
-        self.assertEqual(expected, actual, "Table should enter close round state if only one player hasn't folded.")
 
         self.table.state = TableState.TURN
         for player in self.table.players:

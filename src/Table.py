@@ -42,14 +42,6 @@ class Table:
         for player in self.players:
             player.hand.add_card(self.deck.draw()).add_card(self.deck.draw())
 
-    def every_player_called(self) -> bool:
-        amount = self.get_highest_bid()
-        for player in self.get_not_folded_players():
-            if player.chips_on_table != amount:
-                return False
-
-        return True
-
     def enter_state(self, state: TableState) -> None:
         match state:
             case TableState.INIT_ROUND:
@@ -79,14 +71,6 @@ class Table:
                 if self.state != TableState.PRE_FLOP:
                     raise ValueError("Flop state can only be entered from pre-flop state.")
 
-                if not self.every_player_called():
-                    raise ValueError("Flop state can only be entered if every player called.")
-
-                not_folded_players = self.get_not_folded_players()
-                if len(not_folded_players) <= 1:
-                    self.enter_state(TableState.CLOSE_ROUND)
-                    return
-
                 self.state = TableState.FLOP
                 self.collect_pot()
                 self.deal_community_cards(3)
@@ -96,14 +80,6 @@ class Table:
                 if self.state != TableState.FLOP:
                     raise ValueError("Turn state can only be entered from flop state.")
 
-                if not self.every_player_called():
-                    raise ValueError("Turn state can only be entered if every player called.")
-
-                not_folded_players = self.get_not_folded_players()
-                if len(not_folded_players) <= 1:
-                    self.enter_state(TableState.CLOSE_ROUND)
-                    return
-
                 self.state = TableState.TURN
                 self.collect_pot()
                 self.deal_community_cards(1)
@@ -112,14 +88,6 @@ class Table:
             case TableState.RIVER:
                 if self.state != TableState.TURN:
                     raise ValueError("River state can only be entered from turn state.")
-
-                if not self.every_player_called():
-                    raise ValueError("River state can only be entered if every player called.")
-
-                not_folded_players = self.get_not_folded_players()
-                if len(not_folded_players) <= 1:
-                    self.enter_state(TableState.CLOSE_ROUND)
-                    return
 
                 self.state = TableState.RIVER
                 self.collect_pot()
@@ -145,7 +113,34 @@ class Table:
                 winner.chips += self.pot
                 self.fold_all_players()
 
+    def every_player_acted(self) -> bool:
+        for player in self.get_not_folded_players():
+            if not player.acted:
+                return False
+
+        return True
+
+    def every_player_called(self) -> bool:
+        amount = self.get_highest_bid()
+        for player in self.get_not_folded_players():
+            if player.chips_on_table != amount:
+                return False
+
+        return True
+
     def enter_next_state(self) -> None:
+        if self.state != TableState.INIT_ROUND and self.state != TableState.CLOSE_ROUND:
+            not_folded_players = self.get_not_folded_players()
+            if len(not_folded_players) <= 1:
+                self.enter_state(TableState.CLOSE_ROUND)
+                return
+
+            if not self.every_player_acted():
+                raise ValueError("Entering next state is only allowed if every not folded player acted.")
+
+            if not self.every_player_called():
+                raise ValueError("Next state can only be entered if every player called.")
+
         match self.state:
             case TableState.INIT_ROUND:
                 self.enter_state(TableState.PRE_FLOP)
@@ -159,6 +154,8 @@ class Table:
                 self.enter_state(TableState.CLOSE_ROUND)
             case TableState.CLOSE_ROUND:
                 self.enter_state(TableState.INIT_ROUND)
+
+        self.set_players_acted_false()
 
     def find_winner(self) -> "Player":
         not_folded_players = self.get_not_folded_players()
@@ -198,6 +195,10 @@ class Table:
 
         big_blind = self.players[1]
         big_blind.put_chips_on_table(self.big_blind)
+
+    def set_players_acted_false(self) -> None:
+        for player in self.players:
+            player.acted = False
 
     def shift_players(self):
         self.players.append(self.players.pop(0))
