@@ -25,7 +25,6 @@ class PlayerInfoRenderer(TextRenderer):
         last_action = '  ' + player.last_action + '  '
         position = self.player_id_to_position_map[player.id]
         y_offset = 14
-        background = (60, 60, 60, 0.25)
 
-        self.render_text(chips_txt, position, background=background)
-        self.render_text(last_action, (position[0], position[1] + y_offset), background=background)
+        self.render_text(chips_txt, position)
+        self.render_text(last_action, (position[0], position[1] + y_offset))

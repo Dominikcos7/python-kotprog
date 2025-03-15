@@ -9,7 +9,7 @@ class TextRenderer(Renderer):
         super().__init__(screen)
         self.font = pygame.font.SysFont('Cascadia Code Regular', 12)
 
-    def render_text(self, text: str, position: tuple[float, float], color=(255, 255, 255), background=None) -> None:
+    def render_text(self, text: str, position: tuple[float, float], color=(255, 255, 255), background=(60, 60, 60, 0.25)) -> None:
         rendered_text = self.font.render(text, True, color, background)
         rect = rendered_text.get_rect()
         rect.center = position
