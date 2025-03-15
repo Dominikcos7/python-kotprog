@@ -2,11 +2,11 @@ import pygame
 from pygame import Surface
 
 from src.renderers.PlayerRenderer import PlayerRenderer
-from src.renderers.Renderer import Renderer
 from src.renderers.TableRenderer import TableRenderer
+from src.renderers.TextRenderer import TextRenderer
 
 
-class ChipRenderer(Renderer):
+class ChipRenderer(TextRenderer):
     SCALE = 0.5
     row_number_by_value_map = {
         1: 0,
@@ -63,6 +63,7 @@ class ChipRenderer(Renderer):
         if amount < 1:
             return
 
+        chip_value_txt = str(amount)
         result = {}
         for chip_value in self.chip_values:
             count = amount // chip_value
@@ -78,6 +79,8 @@ class ChipRenderer(Renderer):
             chips = self.sprite.subsurface(pygame.Rect(col * self.chip_width_px, row * self.chip_height_px, self.chip_width_px, self.chip_height_px))
             self.screen.blit(chips, (position[0] + offset * self.chip_width_px, position[1]))
             offset += 1
+
+        self.render_text(chip_value_txt, (position[0] + offset * self.chip_width_px + 2, position[1] + (self.chip_height_px / 3) * 2))
 
     def render_player_chips(self, player_id: int, amount: int) -> None:
         position = self.player_id_to_position_map[player_id]
