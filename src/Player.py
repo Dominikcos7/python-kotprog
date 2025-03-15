@@ -10,10 +10,12 @@ class Player:
         self.hand = Hand()
         self.name = name
         self.acted = False
+        self.last_action = ''
 
     def action_all_in(self):
         self.put_chips_on_table(self.chips)
         self.acted = True
+        self.last_action = 'all in'
 
     def action_call(self, amount: int):
         if amount <= 0:
@@ -25,16 +27,19 @@ class Player:
         call_amount = min(amount, self.chips)
         self.put_chips_on_table(call_amount)
         self.acted = True
+        self.last_action = 'call'
 
     def action_check(self, highest_bid: int):
         if self.chips_on_table < highest_bid:
             raise ValueError("Cannot check if highest bid hasn't been called.")
 
         self.acted = True
+        self.last_action = 'check'
 
     def action_fold(self):
         self.hand.empty()
         self.acted = True
+        self.last_action = 'fold'
 
     def action_raise(self, amount: int):
         if self.chips < amount:
@@ -48,6 +53,7 @@ class Player:
 
         self.put_chips_on_table(amount)
         self.acted = True
+        self.last_action = 'raise'
 
     def is_folded(self) -> bool:
         return self.hand.is_empty()

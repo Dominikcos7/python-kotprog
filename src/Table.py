@@ -57,6 +57,7 @@ class Table:
                 self.community_cards = []
                 self.deck = self.init_deck()
                 self.shift_players()
+                self.reset_players_last_action()
 
             case TableState.PRE_FLOP:
                 if self.state != TableState.INIT_ROUND:
@@ -195,6 +196,10 @@ class Table:
 
         big_blind = self.players[1]
         big_blind.put_chips_on_table(self.big_blind)
+
+    def reset_players_last_action(self):
+        for player in self.players:
+            player.last_action = ''
 
     def set_players_acted_false(self) -> None:
         for player in self.players:

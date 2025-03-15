@@ -3,9 +3,11 @@ import pygame
 from src.CardRenderer import CardRenderer
 from src.ChipRenderer import ChipRenderer
 from src.Player import Player
+from src.PlayerInfoRenderer import PlayerInfoRenderer
 from src.PlayerRenderer import PlayerRenderer
 from src.Table import Table
 from src.TableRenderer import TableRenderer
+from src.TextRenderer import TextRenderer
 from src.enums.TableState import TableState
 
 
@@ -41,7 +43,8 @@ def handle_input(e: pygame.event.Event) -> bool:
                 return False
 
 
-def render_sprites():
+def render():
+    screen.blit(background, (0, 0))
     table_renderer.render_table()
     chip_renderer.render_pot(table.pot)
     card_renderer.render_table_cards(table.community_cards)
@@ -53,6 +56,9 @@ def render_sprites():
     for player in table.get_not_folded_players():
         cards = [player.hand.cards[0], player.hand.cards[1]]
         card_renderer.render_players_cards(player.id, cards)
+
+    for player in players:
+        player_info_renderer.render_player_info(player)
 
 
 def update():
@@ -70,12 +76,12 @@ def update():
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
-font = pygame.font.SysFont('Arial', 30)
 
 table_renderer = TableRenderer(screen)
 player_renderer = PlayerRenderer(screen)
 chip_renderer = ChipRenderer(screen)
 card_renderer = CardRenderer(screen)
+player_info_renderer = PlayerInfoRenderer(screen)
 
 background = pygame.image.load('./src/img/background.jpg')
 
@@ -107,8 +113,7 @@ while running:
     update()
 
     # render
-    screen.blit(background, (0, 0))
-    render_sprites()
+    render()
     pygame.display.flip()
 
     clock.tick(60)
