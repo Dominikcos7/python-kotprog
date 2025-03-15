@@ -53,6 +53,7 @@ class Table:
                     raise ValueError("Init round state cannot be entered if any player has a card.")
 
                 self.state = TableState.INIT_ROUND
+                self.kick_busted_players()
                 self.pot = 0
                 self.community_cards = []
                 self.deck = self.init_deck()
@@ -189,6 +190,9 @@ class Table:
 
     def init_deck(self) -> "Deck":
         return Deck().shuffle()
+
+    def kick_busted_players(self) -> None:
+        self.players = [player for player in self.players if player.chips > 0]
 
     def put_blinds_in(self) -> None:
         small_blind = self.players[0]

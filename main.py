@@ -48,7 +48,7 @@ def render():
     chip_renderer.render_pot(table.pot)
     card_renderer.render_table_cards(table.community_cards)
 
-    for player in players:
+    for player in table.players:
         player_renderer.render_player(player.id)
         chip_renderer.render_player_chips(player.id, player.chips_on_table)
 
@@ -56,7 +56,7 @@ def render():
         cards = [player.hand.cards[0], player.hand.cards[1]]
         card_renderer.render_players_cards(player.id, cards)
 
-    for player in players:
+    for player in table.players:
         player_info_renderer.render_player_info(player)
 
 
@@ -86,7 +86,7 @@ background = pygame.image.load('./src/img/background.jpg')
 
 players = []
 for i in range(8):
-    players.append(Player("player" + str(i), 100, i, True))
+    players.append(Player("player" + str(i), 2, i, True))
 
 table = Table(players, 2)
 
