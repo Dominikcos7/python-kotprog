@@ -77,8 +77,10 @@ player_renderer = PlayerRenderer(screen)
 chip_renderer = ChipRenderer(screen)
 card_renderer = CardRenderer(screen)
 
+background = pygame.image.load('./src/img/background.jpg')
+
 players = []
-for i in range(5):
+for i in range(8):
     players.append(Player("player" + str(i), 100, i, True))
 
 table = Table(players, 2)
@@ -105,6 +107,7 @@ while running:
     update()
 
     # render
+    screen.blit(background, (0, 0))
     render_sprites()
     pygame.display.flip()
 

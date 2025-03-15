@@ -5,7 +5,7 @@ from src.Renderer import Renderer
 
 
 class TableRenderer(Renderer):
-    DEFAULT_POSITION = (310, 100)
+    DEFAULT_POSITION = (450, 200)
     SCALE = 0.35
 
     def __init__(self, screen: Surface):
