@@ -1,8 +1,8 @@
 from pygame import Surface
 
 from src.Player import Player
-from src.PlayerRenderer import PlayerRenderer
-from src.TextRenderer import TextRenderer
+from src.renderers.PlayerRenderer import PlayerRenderer
+from src.renderers.TextRenderer import TextRenderer
 
 
 class PlayerInfoRenderer(TextRenderer):

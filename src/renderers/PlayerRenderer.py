@@ -1,8 +1,8 @@
 import pygame
 from pygame import Surface
 
-from src.Renderer import Renderer
-from src.TableRenderer import TableRenderer
+from src.renderers.Renderer import Renderer
+from src.renderers.TableRenderer import TableRenderer
 
 
 class PlayerRenderer(Renderer):

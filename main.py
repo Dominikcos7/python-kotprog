@@ -1,13 +1,12 @@
 import pygame
 
-from src.CardRenderer import CardRenderer
-from src.ChipRenderer import ChipRenderer
+from src.renderers.CardRenderer import CardRenderer
+from src.renderers.ChipRenderer import ChipRenderer
 from src.Player import Player
-from src.PlayerInfoRenderer import PlayerInfoRenderer
-from src.PlayerRenderer import PlayerRenderer
+from src.renderers.PlayerInfoRenderer import PlayerInfoRenderer
+from src.renderers.PlayerRenderer import PlayerRenderer
 from src.Table import Table
-from src.TableRenderer import TableRenderer
-from src.TextRenderer import TextRenderer
+from src.renderers.TableRenderer import TableRenderer
 from src.enums.TableState import TableState
 
 

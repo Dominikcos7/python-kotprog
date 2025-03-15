@@ -1,9 +1,9 @@
 import pygame
 from pygame import Surface
 
-from src.PlayerRenderer import PlayerRenderer
-from src.Renderer import Renderer
-from src.TableRenderer import TableRenderer
+from src.renderers.PlayerRenderer import PlayerRenderer
+from src.renderers.Renderer import Renderer
+from src.renderers.TableRenderer import TableRenderer
 
 
 class ChipRenderer(Renderer):

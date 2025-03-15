@@ -1,7 +1,7 @@
 import pygame
 from pygame import Surface
 
-from src.Renderer import Renderer
+from src.renderers.Renderer import Renderer
 
 
 class TextRenderer(Renderer):
