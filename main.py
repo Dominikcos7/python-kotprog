@@ -56,8 +56,14 @@ def render():
         cards = [player.hand.cards[0], player.hand.cards[1]]
         card_renderer.render_players_cards(player.id, cards)
 
-    for player in table.players:
-        player_info_renderer.render_player_info(player)
+    for idx, player in enumerate(table.players):
+        match idx:
+            case 0: table_position = 'SB'
+            case 1: table_position = 'BB'
+            case c if c == len(table.players) - 1: table_position = 'D'
+            case _: table_position = ''
+
+        player_info_renderer.render_player_info(player, table_position)
 
 
 def update():
