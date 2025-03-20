@@ -1,5 +1,6 @@
 import pygame
 
+from src.HumanPlayer import HumanPlayer
 from src.renderers.CardRenderer import CardRenderer
 from src.renderers.ChipRenderer import ChipRenderer
 from src.Player import Player
@@ -10,36 +11,60 @@ from src.renderers.TableRenderer import TableRenderer
 from src.enums.TableState import TableState
 
 
-def handle_input(e: pygame.event.Event) -> bool:
+def handle_input(e: pygame.event.Event, player: Player) -> bool:
+    if not isinstance(player, HumanPlayer):
+        return False
+
     if e.type != pygame.KEYDOWN:
         return False
+
+    if player.isRaising:
+        match e.key:
+            case c if c in numerical_keys:
+                player.raise_amount_str += str(int(c) - 48)
+                return False
+
+            case pygame.K_BACKSPACE:
+                player.raise_amount_str = player.raise_amount_str[:-1] if len(player.raise_amount_str) > 0 else ''
+                return False
+
+            case pygame.K_RETURN:
+                call_amount = table.get_highest_bid()
+                player.action_raise(call_amount)
+                return True
+
+            case pygame.K_ESCAPE:
+                player.isRaising = False
+                player.raise_amount_str = ''
     else:
         match e.key:
             case pygame.K_c:
                 try:
                     bid = table.get_highest_bid()
-                    amount = bid - acting_player.chips_on_table
-                    acting_player.action_call(amount)
+                    amount = bid - player.chips_on_table
+                    player.action_call(amount)
                     return True
                 except ValueError as ex:
                     print(ex)
                     return False
 
             case pygame.K_f:
-                acting_player.action_fold()
+                player.action_fold()
                 return True
 
             case pygame.K_p:
                 try:
                     bid = table.get_highest_bid()
-                    acting_player.action_check(bid)
+                    player.action_check(bid)
                     return True
                 except ValueError as ex:
                     print(ex)
                     return False
 
-            case _:
-                return False
+            case pygame.K_r:
+                player.start_raise()
+
+    return False
 
 
 def render():
@@ -58,10 +83,14 @@ def render():
 
     for idx, player in enumerate(table.players):
         match idx:
-            case 0: table_position = 'SB'
-            case 1: table_position = 'BB'
-            case c if c == len(table.players) - 1: table_position = 'D'
-            case _: table_position = ''
+            case 0:
+                table_position = 'SB'
+            case 1:
+                table_position = 'BB'
+            case c if c == len(table.players) - 1:
+                table_position = 'D'
+            case _:
+                table_position = ''
 
         player_info_renderer.render_player_info(player, table_position)
 
@@ -82,6 +111,19 @@ pygame.init()
 screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 
+numerical_keys = [
+    pygame.K_0,
+    pygame.K_1,
+    pygame.K_2,
+    pygame.K_3,
+    pygame.K_4,
+    pygame.K_5,
+    pygame.K_6,
+    pygame.K_7,
+    pygame.K_8,
+    pygame.K_9,
+]
+
 table_renderer = TableRenderer(screen)
 player_renderer = PlayerRenderer(screen)
 chip_renderer = ChipRenderer(screen)
@@ -92,7 +134,7 @@ background = pygame.image.load('./src/img/background.jpg')
 
 players = []
 for i in range(8):
-    players.append(Player("player" + str(i), 2, i, True))
+    players.append(HumanPlayer("player" + str(i), 100, i))
 
 table = Table(players, 2)
 
@@ -107,7 +149,7 @@ while running:
             table.enter_next_state()
         else:
             acting_player = table.get_acting_player()
-            if acting_player.is_human and handle_input(event):
+            if handle_input(event, acting_player):
                 try:
                     table.enter_next_state()
                 except ValueError as ex:

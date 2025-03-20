@@ -2,9 +2,8 @@ from src.Hand import Hand
 
 
 class Player:
-    def __init__(self, name: str, chips: int, player_id: int = 0, is_human: bool = False):
+    def __init__(self, name: str, chips: int, player_id: int = 0):
         self.id = player_id
-        self.is_human = is_human
         self.chips = chips
         self.chips_on_table = 0
         self.hand = Hand()
@@ -41,7 +40,10 @@ class Player:
         self.acted = True
         self.last_action = 'fold'
 
-    def action_raise(self, amount: int):
+    def action_raise(self, amount: int, call_amount: int):
+        if amount <= call_amount:
+            raise ValueError("Cannot raise less or equal than call amount")
+
         if self.chips < amount:
             raise ValueError("Cannot raise more than the amount of chips the player has.")
 

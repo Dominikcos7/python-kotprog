@@ -21,6 +21,7 @@ def init_player_with_cards_in_hand() -> Player:
 class TestPlayer(unittest.TestCase):
     def setUp(self):
         self.player = init_player()
+        self.call_amount = 0
 
     def test_call(self):
         chips_before_call = self.player.chips
@@ -57,7 +58,7 @@ class TestPlayer(unittest.TestCase):
         chips_on_table_before_raise = self.player.chips_on_table
 
         amount = chips_before_raise - 100
-        self.player.action_raise(amount)
+        self.player.action_raise(amount, self.call_amount)
 
         expected_chips_after_raise = chips_before_raise - amount
         actual_chips_after_raise = self.player.chips
@@ -72,7 +73,7 @@ class TestPlayer(unittest.TestCase):
 
     def test_raise_with_not_enough_chips_to_raise(self):
         amount = self.player.chips + 100
-        self.assertRaises(ValueError, self.player.action_raise, amount)
+        self.assertRaises(ValueError, self.player.action_raise, amount, self.call_amount)
 
     def test_all_in(self):
         chips_before_all_in = self.player.chips
@@ -106,7 +107,7 @@ class TestPlayer(unittest.TestCase):
 
     def test_raise_with_player_having_negative_chips(self):
         self.player.chips = -1
-        self.assertRaises(ValueError, self.player.action_raise, 100)
+        self.assertRaises(ValueError, self.player.action_raise, 100, self.call_amount)
 
     def test_raise_would_result_in_negative_chips(self):
         amount = self.player.chips + 1000
@@ -114,10 +115,10 @@ class TestPlayer(unittest.TestCase):
         self.assertGreaterEqual(self.player.chips, 0)
 
     def test_raise_with_negative_amount(self):
-        self.assertRaises(ValueError, self.player.action_raise, -1)
+        self.assertRaises(ValueError, self.player.action_raise, -1, self.call_amount)
 
     def test_raise_with_zero_amount(self):
-        self.assertRaises(ValueError, self.player.action_raise, 0)
+        self.assertRaises(ValueError, self.player.action_raise, 0, self.call_amount)
 
     def test_check_if_there_is_bid_to_call(self):
         highest_bid = 100
@@ -142,6 +143,11 @@ class TestPlayer(unittest.TestCase):
     def test_check_should_set_acted_to_true(self):
         self.player.action_check(0)
         self.assertTrue(self.player.acted, "Player's acted field should be true after acting.")
+
+    def test_raise_less_or_equal_than_call_amount(self):
+        call_amount = 10
+        self.assertRaises(ValueError, self.player.action_raise, call_amount-1, call_amount)
+        self.assertRaises(ValueError, self.player.action_raise, call_amount, call_amount)
 
 
 if __name__ == '__main__':
