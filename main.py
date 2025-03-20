@@ -16,52 +16,48 @@ def handle_input(e: pygame.event.Event) -> bool:
     if e.type != pygame.KEYDOWN:
         return False
 
-    if acting_player.is_raising:
-        match e.key:
-            case c if c in numerical_keys:
-                acting_player.raise_amount_str += str(int(c) - 48)
-                return False
+    try:
+        if acting_player.is_raising:
+            match e.key:
+                case c if c in numerical_keys:
+                    acting_player.raise_amount_str += str(int(c) - 48)
+                    return False
 
-            case pygame.K_BACKSPACE:
-                acting_player.raise_amount_str = acting_player.raise_amount_str[:-1] if len(acting_player.raise_amount_str) > 0 else ''
-                return False
+                case pygame.K_BACKSPACE:
+                    acting_player.raise_amount_str = acting_player.raise_amount_str[:-1] if len(acting_player.raise_amount_str) > 0 else ''
+                    return False
 
-            case pygame.K_RETURN:
-                call_amount = table.get_highest_bid()
-                acting_player.action_raise(call_amount)
-                return True
+                case pygame.K_RETURN:
+                    call_amount = table.get_highest_bid()
+                    acting_player.action_raise(call_amount)
+                    return True
 
-            case pygame.K_ESCAPE:
-                acting_player.is_raising = False
-                acting_player.raise_amount_str = ''
-    else:
-        match e.key:
-            case pygame.K_c:
-                try:
+                case pygame.K_ESCAPE:
+                    acting_player.is_raising = False
+                    acting_player.raise_amount_str = ''
+        else:
+            match e.key:
+                case pygame.K_c:
                     bid = table.get_highest_bid()
                     amount = bid - acting_player.chips_on_table
                     acting_player.action_call(amount)
                     return True
-                except ValueError as ex:
-                    print(ex)
-                    return False
 
-            case pygame.K_f:
-                acting_player.action_fold()
-                return True
+                case pygame.K_f:
+                    acting_player.action_fold()
+                    return True
 
-            case pygame.K_p:
-                try:
+                case pygame.K_p:
                     bid = table.get_highest_bid()
                     acting_player.action_check(bid)
                     return True
-                except ValueError as ex:
-                    print(ex)
-                    return False
 
-            case pygame.K_r:
-                acting_player.start_raise()
-                return False
+                case pygame.K_r:
+                    acting_player.start_raise()
+                    return False
+    except Exception as e:
+        print(e)
+        return False
 
     return False
 
