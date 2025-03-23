@@ -12,7 +12,7 @@ class Table:
         self.deck = self.init_deck()
         self.pot = 0
         self.community_cards = list()
-        self.actor_idx = 2
+        self.actor_idx = 0
 
     def bump_actor_idx(self) -> None:
         if len(self.get_not_folded_players()) < 1:
@@ -67,7 +67,7 @@ class Table:
                 self.state = TableState.PRE_FLOP
                 self.deal_pocket_cards()
                 self.put_blinds_in()
-                self.actor_idx = 2
+                self.actor_idx = 2 if len(self.players) > 2 else 0
 
             case TableState.FLOP:
                 if self.state != TableState.PRE_FLOP:

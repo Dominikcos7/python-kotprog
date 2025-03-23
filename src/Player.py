@@ -10,6 +10,7 @@ class Player:
         self.name = name
         self.acted = False
         self.last_action = ''
+        self.is_raising = False
 
     def action_all_in(self):
         self.put_chips_on_table(self.chips)
@@ -56,6 +57,9 @@ class Player:
         self.put_chips_on_table(amount)
         self.acted = True
         self.last_action = 'raise'
+
+    def get_amount_to_call(self, highest_bid: int) -> int:
+        return highest_bid - self.chips_on_table
 
     def is_folded(self) -> bool:
         return self.hand.is_empty()

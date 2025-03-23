@@ -1,9 +1,9 @@
 import pygame
 
+from src.CheckOrCallPlayer import CheckOrCallPlayer
 from src.HumanPlayer import HumanPlayer
 from src.renderers.CardRenderer import CardRenderer
 from src.renderers.ChipRenderer import ChipRenderer
-from src.Player import Player
 from src.renderers.PlayerInfoRenderer import PlayerInfoRenderer
 from src.renderers.PlayerRenderer import PlayerRenderer
 from src.Table import Table
@@ -39,7 +39,7 @@ def handle_input(e: pygame.event.Event) -> bool:
             match e.key:
                 case pygame.K_c:
                     bid = table.get_highest_bid()
-                    amount = bid - acting_player.chips_on_table
+                    amount = acting_player.get_amount_to_call(bid)
                     acting_player.action_call(amount)
                     return True
 
@@ -133,9 +133,9 @@ raise_info_renderer = RaiseInfoRenderer(screen)
 
 background = pygame.image.load('./src/img/background.jpg')
 
-players = []
-for i in range(8):
-    players.append(HumanPlayer("player" + str(i), 100, i))
+players = [HumanPlayer("player", 100, 0)]
+for i in range(1, 2):
+    players.append(CheckOrCallPlayer("aiplayer" + str(i), 100, i))
 
 table = Table(players, 2)
 
@@ -150,7 +150,16 @@ while running:
             table.enter_next_state()
         else:
             acting_player = table.get_acting_player()
-            if isinstance(acting_player, HumanPlayer) and handle_input(event):
+            if isinstance(acting_player, HumanPlayer):
+                if handle_input(event):
+                    try:
+                        table.enter_next_state()
+                    except ValueError as ex:
+                        print(ex)
+                        table.bump_actor_idx()
+            else:
+                highest_bid = table.get_highest_bid()
+                acting_player.act(highest_bid)
                 try:
                     table.enter_next_state()
                 except ValueError as ex:
