@@ -59,6 +59,7 @@ class Table:
                 self.deck = self.init_deck()
                 self.shift_players()
                 self.reset_players_last_action()
+                self.reset_players_all_in_state()
 
             case TableState.PRE_FLOP:
                 if self.state != TableState.INIT_ROUND:
@@ -200,6 +201,10 @@ class Table:
 
         big_blind = self.players[1]
         big_blind.put_chips_on_table(self.big_blind)
+
+    def reset_players_all_in_state(self):
+        for player in self.players:
+            player.is_all_in = False
 
     def reset_players_last_action(self):
         for player in self.players:

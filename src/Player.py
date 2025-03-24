@@ -11,11 +11,13 @@ class Player:
         self.acted = False
         self.last_action = ''
         self.is_raising = False
+        self.is_all_in = False
 
     def action_all_in(self):
-        self.put_chips_on_table(self.chips)
         self.acted = True
         self.last_action = 'all in'
+        self.is_all_in = True
+        self.put_chips_on_table(self.chips)
 
     def action_call(self, amount: int):
         if amount <= 0:
@@ -25,9 +27,9 @@ class Player:
             raise ValueError("Cannot call with 0 or less chips.")
 
         call_amount = min(amount, self.chips)
-        self.put_chips_on_table(call_amount)
         self.acted = True
         self.last_action = 'call'
+        self.put_chips_on_table(call_amount)
 
     def action_check(self, highest_bid: int):
         if self.chips_on_table < highest_bid:
@@ -54,9 +56,9 @@ class Player:
         if amount <= 0:
             raise ValueError("Raise amount must be larger than 0.")
 
-        self.put_chips_on_table(amount)
         self.acted = True
         self.last_action = 'raise'
+        self.put_chips_on_table(amount)
 
     def get_amount_to_call(self, highest_bid: int) -> int:
         return highest_bid - self.chips_on_table
@@ -67,3 +69,6 @@ class Player:
     def put_chips_on_table(self, amount: int):
         self.chips -= amount
         self.chips_on_table += amount
+
+        if not self.is_all_in and self.chips <= 0:
+            self.action_all_in()

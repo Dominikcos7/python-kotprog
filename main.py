@@ -134,7 +134,7 @@ raise_info_renderer = RaiseInfoRenderer(screen)
 background = pygame.image.load('./src/img/background.jpg')
 
 players = [HumanPlayer("player", 100, 0)]
-for i in range(1, 2):
+for i in range(1, 3):
     players.append(CheckOrCallPlayer("aiplayer" + str(i), 100, i))
 
 table = Table(players, 2)
@@ -150,7 +150,15 @@ while running:
             table.enter_next_state()
         else:
             acting_player = table.get_acting_player()
-            if isinstance(acting_player, HumanPlayer):
+
+            if acting_player.is_all_in or acting_player.is_folded():
+                acting_player.acted = True
+                try:
+                    table.enter_next_state()
+                except ValueError as ex:
+                    print(ex)
+                    table.bump_actor_idx()
+            elif isinstance(acting_player, HumanPlayer):
                 if handle_input(event):
                     try:
                         table.enter_next_state()
