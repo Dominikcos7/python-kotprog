@@ -49,17 +49,22 @@ class CardRenderer(Renderer):
         super().__init__(screen)
         self.sprite = pygame.image.load('./src/img/cards.png')
 
-    def render_card(self, card: Card, position: tuple[float, float]) -> None:
-        col = self.col_number_by_rank_map[card.rank]
-        row = self.row_number_by_suit_map[card.suit]
+    def render_card(self, card: Card, position: tuple[float, float], show_cards=True) -> None:
+        if show_cards:
+            col = self.col_number_by_rank_map[card.rank]
+            row = self.row_number_by_suit_map[card.suit]
+        else:
+            col = 0
+            row = 4
+
         card = self.sprite.subsurface(pygame.Rect(col * self.w, row * self.h, self.w, self.h))
         self.screen.blit(card, position)
 
-    def render_players_cards(self, player_id: int, cards: list[Card]) -> None:
+    def render_players_cards(self, player_id: int, cards: list[Card], show_cards=True) -> None:
         offset = 0
         for card in cards:
             x, y = self.player_id_to_position_map[player_id]
-            self.render_card(card, (x + offset, y))
+            self.render_card(card, (x + offset, y), show_cards)
             offset += self.w
 
     def render_table_cards(self, cards: list[Card], card_number: int = 0) -> None:

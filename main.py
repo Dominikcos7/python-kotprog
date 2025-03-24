@@ -74,7 +74,8 @@ def render():
 
     for player in table.get_not_folded_players():
         cards = [player.hand.cards[0], player.hand.cards[1]]
-        card_renderer.render_players_cards(player.id, cards)
+        show_cards = isinstance(player, HumanPlayer)
+        card_renderer.render_players_cards(player.id, cards, show_cards)
 
     for idx, player in enumerate(table.players):
         match idx:
