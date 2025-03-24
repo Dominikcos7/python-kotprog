@@ -12,14 +12,6 @@ from src.renderers.TableRenderer import TableRenderer
 from src.enums.TableState import TableState
 
 
-def after_act():
-    try:
-        table.enter_next_state()
-    except ValueError as ex:
-        print(ex)
-        table.bump_actor_idx()
-
-
 def handle_input(e: pygame.event.Event) -> bool:
     if e.type != pygame.KEYDOWN:
         return False
@@ -160,12 +152,19 @@ while running:
             acting_player = table.get_acting_player()
             if isinstance(acting_player, HumanPlayer):
                 if handle_input(event):
-                    after_act()
+                    try:
+                        table.enter_next_state()
+                    except ValueError as ex:
+                        print(ex)
+                        table.bump_actor_idx()
             else:
                 highest_bid = table.get_highest_bid()
                 acting_player.act(highest_bid)
-                after_act()
-
+                try:
+                    table.enter_next_state()
+                except ValueError as ex:
+                    print(ex)
+                    table.bump_actor_idx()
 
     # update
     update()
