@@ -165,11 +165,6 @@ class TestTable(unittest.TestCase):
         self.assertRaises(ValueError, self.table.enter_state, TableState.INIT_ROUND)
 
         self.table.state = TableState.CLOSE_ROUND
-        self.table.players[0].hand.add_card(self.table.deck.draw())
-        # raise error if any player has cards in their hands
-        self.assertRaises(ValueError, self.table.enter_state, TableState.INIT_ROUND)
-
-        self.table.players[0].action_fold()
         next_small_blind = self.table.players[1]
         self.table.enter_state(TableState.INIT_ROUND)
 

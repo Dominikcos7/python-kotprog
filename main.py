@@ -1,3 +1,5 @@
+import time
+
 import pygame
 
 from src.CheckOrCallPlayer import CheckOrCallPlayer
@@ -8,6 +10,7 @@ from src.renderers.PlayerInfoRenderer import PlayerInfoRenderer
 from src.renderers.PlayerRenderer import PlayerRenderer
 from src.Table import Table
 from src.renderers.RaiseInfoRenderer import RaiseInfoRenderer
+from src.renderers.RoundWinnerInfoRenderer import RoundWinnerInfoRenderer
 from src.renderers.TableRenderer import TableRenderer
 from src.enums.TableState import TableState
 
@@ -95,6 +98,9 @@ def render():
         position = (720, 20)
         raise_info_renderer.render_text(txt, position, background=None)
 
+    if table.round_winner is not None:
+        round_winner_info_renderer.render_round_winner_info(table.round_winner, table.pot)
+
 
 def update():
     pass
@@ -131,6 +137,7 @@ chip_renderer = ChipRenderer(screen)
 card_renderer = CardRenderer(screen)
 player_info_renderer = PlayerInfoRenderer(screen)
 raise_info_renderer = RaiseInfoRenderer(screen)
+round_winner_info_renderer = RoundWinnerInfoRenderer(screen)
 
 background = pygame.image.load('./src/img/background.jpg')
 
@@ -181,6 +188,9 @@ while running:
     # render
     render()
     pygame.display.flip()
+
+    if table.state == TableState.CLOSE_ROUND:
+        time.sleep(5)
 
     clock.tick(60)
 

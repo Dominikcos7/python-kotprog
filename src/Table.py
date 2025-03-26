@@ -13,6 +13,7 @@ class Table:
         self.pot = 0
         self.community_cards = list()
         self.actor_idx = 0
+        self.round_winner = None
 
     def bump_actor_idx(self) -> None:
         if len(self.get_not_folded_players()) < 1:
@@ -48,13 +49,11 @@ class Table:
                 if self.state != TableState.CLOSE_ROUND:
                     raise ValueError("Init round state can only be entered from close round state.")
 
-                not_folded_players = self.get_not_folded_players()
-                if len(not_folded_players) > 0:
-                    raise ValueError("Init round state cannot be entered if any player has a card.")
-
                 self.state = TableState.INIT_ROUND
                 self.kick_busted_players()
+                self.round_winner = None
                 self.pot = 0
+                self.fold_all_players()
                 self.community_cards = []
                 self.deck = self.init_deck()
                 self.shift_players()
@@ -112,9 +111,8 @@ class Table:
 
                 self.state = TableState.CLOSE_ROUND
                 self.collect_pot()
-                winner = self.find_winner()
-                winner.chips += self.pot
-                self.fold_all_players()
+                self.round_winner = self.find_winner()
+                self.round_winner.chips += self.pot
 
     def every_player_acted(self) -> bool:
         for player in self.get_not_folded_players():
