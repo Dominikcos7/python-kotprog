@@ -94,9 +94,7 @@ def render():
         player_info_renderer.render_player_info(player, table_position)
 
     if acting_player.is_raising:
-        txt = 'Raising: ' + acting_player.raise_amount_str
-        position = (720, 20)
-        raise_info_renderer.render_text(txt, position, background=None)
+        raise_info_renderer.render_raise_info(acting_player.raise_amount_str)
 
     if table.round_winner is not None:
         round_winner_info_renderer.render_round_winner_info(table.round_winner, table.pot)

@@ -13,5 +13,4 @@ class RoundWinnerInfoRenderer(InfoRenderer):
         winning_hand = winner.hand.evaluator.class_to_string(rank_class)
         text = f"{winner.name} wins {amount} with {winning_hand}!"
 
-        print(text)
         self.render_info(text)
