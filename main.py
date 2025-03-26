@@ -77,7 +77,7 @@ def render():
 
     for player in table.get_not_folded_players():
         cards = [player.hand.cards[0], player.hand.cards[1]]
-        show_cards = isinstance(player, HumanPlayer)
+        show_cards = isinstance(player, HumanPlayer) or table.state == TableState.CLOSE_ROUND
         card_renderer.render_players_cards(player.id, cards, show_cards)
 
     for idx, player in enumerate(table.players):

@@ -162,7 +162,7 @@ class Table:
         not_folded_players = self.get_not_folded_players()
         winner = not_folded_players[0]
         for player in not_folded_players[1:]:
-            if player.hand.evaluate() > winner.hand.evaluate():
+            if player.hand.evaluate() < winner.hand.evaluate():
                 winner = player
 
         return winner
