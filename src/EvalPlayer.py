@@ -14,17 +14,9 @@ class EvalPlayer(AIPlayer):
         self.call_bar = 10
         self.check_bar = 5
         self.fold_bar = 0
-        self.eval_fill_cards = [Card(Suit.HEART, Rank.ACE), Card(Suit.SPADE, Rank.KING), Card(Suit.CLUB, Rank.EIGHT)]
 
     def act(self, highest_bid: int) -> None:
-        if len(self.hand.cards) >= 5:
-            hand = self.hand
-        else:
-            hand = Hand()
-            hand.cards = [card for card in self.hand.cards]
-            hand.cards.extend(self.eval_fill_cards)
-
-        hand_eval = hand.evaluate()
+        hand_eval = self.hand.evaluate()
         if hand_eval < 1500:
             self.align_bars(-14)
         elif hand_eval < 3000:
