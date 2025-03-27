@@ -105,7 +105,7 @@ class Table:
                     raise ValueError(
                         "Close round state cannot be entered if table is in river state and more than one player haven't folded.")
 
-                if self.state == TableState.RIVER and len(not_folded_players) > 1 and not self.every_player_called():
+                if self.state == TableState.RIVER and len(not_folded_players) > 1 and not self.every_player_called_or_all_in():
                     raise ValueError(
                         "Close round state cannot be entered if table is in river state, more than one player haven't folded and not everyone has called the largest bid.")
 
@@ -121,10 +121,10 @@ class Table:
 
         return True
 
-    def every_player_called(self) -> bool:
+    def every_player_called_or_all_in(self) -> bool:
         amount = self.get_highest_bid()
         for player in self.get_not_folded_players():
-            if player.chips_on_table != amount:
+            if player.chips_on_table != amount and not player.is_all_in:
                 return False
 
         return True
@@ -139,7 +139,7 @@ class Table:
             if not self.every_player_acted():
                 raise ValueError("Entering next state is only allowed if every not folded player acted.")
 
-            if not self.every_player_called():
+            if not self.every_player_called_or_all_in():
                 raise ValueError("Next state can only be entered if every player called.")
 
         match self.state:
