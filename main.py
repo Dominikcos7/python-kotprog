@@ -3,6 +3,7 @@ import time
 import pygame
 
 from src.CheckOrCallPlayer import CheckOrCallPlayer
+from src.EvalPlayer import EvalPlayer
 from src.HumanPlayer import HumanPlayer
 from src.renderers.CardRenderer import CardRenderer
 from src.renderers.ChipRenderer import ChipRenderer
@@ -140,8 +141,8 @@ round_winner_info_renderer = RoundWinnerInfoRenderer(screen)
 background = pygame.image.load('./src/img/background.jpg')
 
 players = [HumanPlayer("player", 100, 0)]
-for i in range(1, 3):
-    players.append(CheckOrCallPlayer("aiplayer" + str(i), 100, i))
+for i in range(1, 8):
+    players.append(EvalPlayer("aiplayer" + str(i), 100, i))
 
 table = Table(players, 2)
 
