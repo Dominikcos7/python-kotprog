@@ -97,7 +97,7 @@ def render():
         raise_info_renderer.render_raise_info(acting_player.raise_amount_str)
 
     if table.round_winner is not None:
-        round_winner_info_renderer.render_round_winner_info(table.round_winner, table.pot)
+        round_winner_info_renderer.render_round_winner_info(table.round_winner, table.pot, table.community_cards)
 
 
 def update():
@@ -140,7 +140,7 @@ round_winner_info_renderer = RoundWinnerInfoRenderer(screen)
 background = pygame.image.load('./src/img/background.jpg')
 
 players = [HumanPlayer("player", 100, 0)]
-for i in range(1, 8):
+for i in range(1, 2):
     players.append(EvalPlayer("aiplayer" + str(i), 100, i))
 
 table = Table(players, 2)
