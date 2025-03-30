@@ -140,7 +140,7 @@ round_winner_info_renderer = RoundWinnerInfoRenderer(screen)
 background = pygame.image.load('./src/img/background.jpg')
 
 players = [HumanPlayer("player", 100, 0)]
-for i in range(1, 2):
+for i in range(1, 8):
     players.append(EvalPlayer("aiplayer" + str(i), 100, i))
 
 table = Table(players, 2)
