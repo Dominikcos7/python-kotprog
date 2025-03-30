@@ -6,6 +6,7 @@ from src.EvalPlayer import EvalPlayer
 from src.HumanPlayer import HumanPlayer
 from src.renderers.CardRenderer import CardRenderer
 from src.renderers.ChipRenderer import ChipRenderer
+from src.renderers.InfoRenderer import InfoRenderer
 from src.renderers.PlayerInfoRenderer import PlayerInfoRenderer
 from src.renderers.PlayerRenderer import PlayerRenderer
 from src.Table import Table
@@ -95,6 +96,8 @@ def render():
 
     if acting_player.is_raising:
         raise_info_renderer.render_raise_info(acting_player.raise_amount_str)
+    elif isinstance(acting_player, HumanPlayer):
+        info_renderer.render_info('YOUR TURN!')
 
     if table.round_winner is not None:
         round_winner_info_renderer.render_round_winner_info(table.round_winner, table.pot, table.community_cards)
@@ -136,6 +139,7 @@ card_renderer = CardRenderer(screen)
 player_info_renderer = PlayerInfoRenderer(screen)
 raise_info_renderer = RaiseInfoRenderer(screen)
 round_winner_info_renderer = RoundWinnerInfoRenderer(screen)
+info_renderer = InfoRenderer(screen)
 
 background = pygame.image.load('./src/img/background.jpg')
 
@@ -164,6 +168,7 @@ while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
             if handle_input(event):
                 try:
                     table.enter_next_state()
@@ -172,6 +177,7 @@ while running:
                     table.bump_actor_idx()
     else:
         highest_bid = table.get_highest_bid()
+        time.sleep(1)
         acting_player.act(highest_bid)
         try:
             table.enter_next_state()
