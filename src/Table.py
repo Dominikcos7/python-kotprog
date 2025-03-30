@@ -1,3 +1,4 @@
+from src import SoundPlayer
 from src.Deck import Deck
 from src.Player import Player
 from src.enums.TableState import TableState
@@ -188,6 +189,7 @@ class Table:
         return ret
 
     def init_deck(self) -> "Deck":
+        SoundPlayer.play_shuffle_sound()
         return Deck().shuffle()
 
     def kick_busted_players(self) -> None:

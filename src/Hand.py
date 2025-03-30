@@ -1,6 +1,7 @@
 import treys
 from treys import Evaluator
 
+from src import SoundPlayer
 from src.Card import Card
 from src.enums.Rank import Rank
 from src.enums.Suit import Suit
@@ -21,6 +22,7 @@ class Hand:
 
     def add_card(self, card: Card) -> "Hand":
         self.cards.append(card)
+        SoundPlayer.play_deal_sound()
         return self
 
     def empty(self):
