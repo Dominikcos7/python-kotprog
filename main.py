@@ -2,7 +2,6 @@ import time
 
 import pygame
 
-from src.CheckOrCallPlayer import CheckOrCallPlayer
 from src.EvalPlayer import EvalPlayer
 from src.HumanPlayer import HumanPlayer
 from src.renderers.CardRenderer import CardRenderer
