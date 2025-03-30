@@ -147,38 +147,37 @@ table = Table(players, 2)
 
 running = True
 while running:
-    # handle input
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+    if table.state == TableState.INIT_ROUND or table.state == TableState.CLOSE_ROUND:
+        table.enter_next_state()
 
-        if table.state == TableState.INIT_ROUND or table.state == TableState.CLOSE_ROUND:
+    acting_player = table.get_acting_player()
+
+    if acting_player.is_all_in or acting_player.is_folded():
+        acting_player.acted = True
+        try:
             table.enter_next_state()
-        else:
-            acting_player = table.get_acting_player()
-
-            if acting_player.is_all_in or acting_player.is_folded():
-                acting_player.acted = True
+        except ValueError as ex:
+            print(ex)
+            table.bump_actor_idx()
+    elif isinstance(acting_player, HumanPlayer):
+        # handle input
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if handle_input(event):
                 try:
                     table.enter_next_state()
                 except ValueError as ex:
                     print(ex)
                     table.bump_actor_idx()
-            elif isinstance(acting_player, HumanPlayer):
-                if handle_input(event):
-                    try:
-                        table.enter_next_state()
-                    except ValueError as ex:
-                        print(ex)
-                        table.bump_actor_idx()
-            else:
-                highest_bid = table.get_highest_bid()
-                acting_player.act(highest_bid)
-                try:
-                    table.enter_next_state()
-                except ValueError as ex:
-                    print(ex)
-                    table.bump_actor_idx()
+    else:
+        highest_bid = table.get_highest_bid()
+        acting_player.act(highest_bid)
+        try:
+            table.enter_next_state()
+        except ValueError as ex:
+            print(ex)
+            table.bump_actor_idx()
 
     # update
     update()
