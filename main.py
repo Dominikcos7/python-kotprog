@@ -96,7 +96,7 @@ def render():
 
     if acting_player.is_raising:
         raise_info_renderer.render_raise_info(acting_player.raise_amount_str)
-    elif isinstance(acting_player, HumanPlayer):
+    elif isinstance(acting_player, HumanPlayer) and not acting_player.is_folded() and not acting_player.is_all_in:
         info_renderer.render_info('YOUR TURN!')
 
     if table.round_winner is not None:
