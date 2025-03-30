@@ -1,4 +1,5 @@
 from src.Hand import Hand
+from src.SoundPlayer import play_chips_sound
 
 
 class Player:
@@ -72,3 +73,5 @@ class Player:
 
         if not self.is_all_in and self.chips <= 0:
             self.action_all_in()
+
+        play_chips_sound()

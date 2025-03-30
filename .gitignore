@@ -3,3 +3,4 @@
 /*/*/__pycache__/*
 mikado.md
 /src/img/*.kra
+.coverage
