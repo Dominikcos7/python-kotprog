@@ -16,6 +16,13 @@ from src.renderers.TableRenderer import TableRenderer
 from src.enums.TableState import TableState
 from src.resource_path import get_resource_path
 
+"""
+This is the main file of the game. The main game loop looks like this:
+1. Request the events from the game and handle them accordingly. Events can be the input of the player or an exit event.
+2. Update game state according to the event being handled
+3. Render the view based on the current state of the game (the logic is separated from game state updates)
+"""
+
 
 def handle_input(e: pygame.event.Event) -> bool:
     if e.type != pygame.KEYDOWN:
@@ -29,7 +36,8 @@ def handle_input(e: pygame.event.Event) -> bool:
                     return False
 
                 case pygame.K_BACKSPACE:
-                    acting_player.raise_amount_str = acting_player.raise_amount_str[:-1] if len(acting_player.raise_amount_str) > 0 else ''
+                    acting_player.raise_amount_str = acting_player.raise_amount_str[:-1] if len(
+                        acting_player.raise_amount_str) > 0 else ''
                     return False
 
                 case pygame.K_RETURN:
@@ -104,18 +112,6 @@ def render():
         round_winner_info_renderer.render_round_winner_info(table.round_winner, table.pot, table.community_cards)
 
 
-def update():
-    pass
-
-
-#####################################
-# Game loop should look like this:  #
-# handleInput()                     #
-# updateStates()                    #
-# render()                          #
-#####################################
-
-
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
@@ -185,9 +181,6 @@ while running:
         except ValueError as ex:
             print(ex)
             table.bump_actor_idx()
-
-    # update
-    update()
 
     # render
     render()
