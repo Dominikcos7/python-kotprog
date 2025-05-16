@@ -7,6 +7,10 @@ from src.resource_path import get_resource_path
 
 
 class PlayerRenderer(Renderer):
+    """
+    This class is responsible for rendering players on the screen.
+    """
+
     SCALE = 0.3
     table_x, table_y = TableRenderer.DEFAULT_POSITION
     id_to_picture_map = {
@@ -37,9 +41,16 @@ class PlayerRenderer(Renderer):
     }
 
     def __init__(self, screen: Surface):
+        """
+        :param screen: the pygame Surface to render the info on
+        """
         super().__init__(screen)
 
     def render_player(self, player_id: int) -> None:
+        """
+        :param player_id: the id of the player to be rendered
+        """
+
         image = pygame.image.load(self.id_to_picture_map[player_id])
         w, h = image.get_size()
         image = pygame.transform.scale(image, (w * self.SCALE, h * self.SCALE))

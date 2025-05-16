@@ -8,6 +8,10 @@ from src.resource_path import get_resource_path
 
 
 class ChipRenderer(TextRenderer):
+    """
+    This class is responsible for rendering chips on the screen.
+    """
+
     SCALE = 0.5
     row_number_by_value_map = {
         1: 0,
@@ -41,6 +45,10 @@ class ChipRenderer(TextRenderer):
     }
 
     def __init__(self, screen: Surface):
+        """
+        :param screen: the pygame Surface to render the chips on
+        """
+
         super().__init__(screen)
         self.sprite = pygame.image.load(get_resource_path('img/chips.png'))
         w, h = self.sprite.get_size()[0] * self.SCALE, self.sprite.get_size()[1] * self.SCALE
@@ -50,6 +58,11 @@ class ChipRenderer(TextRenderer):
         self.chip_values = [200, 100, 50, 20, 10, 5, 2, 1]
 
     def get_col_offset_by_count(self, count: int) -> int:
+        """
+        :param count: number of chips
+        :return: offset value on the sprite
+        """
+
         match count:
             case 2:
                 return 1
@@ -61,6 +74,11 @@ class ChipRenderer(TextRenderer):
                 return 0
 
     def render_chips(self, amount: int, position: tuple[float, float]) -> None:
+        """
+        :param amount: number of chips
+        :param position: position of the chips on the screen (tuple[float, float])
+        """
+
         if amount < 1:
             return
 
@@ -84,9 +102,18 @@ class ChipRenderer(TextRenderer):
         self.render_text(chip_value_txt, (position[0] + offset * self.chip_width_px + 2, position[1] + (self.chip_height_px / 3) * 2))
 
     def render_player_chips(self, player_id: int, amount: int) -> None:
+        """
+        :param player_id: id of the player
+        :param amount: number of chips
+        """
+
         position = self.player_id_to_position_map[player_id]
         self.render_chips(amount, position)
 
-    def render_pot(self, amount: int):
+    def render_pot(self, amount: int) -> None:
+        """
+        :param amount: number of chips
+        """
+
         position = (TableRenderer.DEFAULT_POSITION[0] + 300, TableRenderer.DEFAULT_POSITION[1] + 120)
         self.render_chips(amount, position)
