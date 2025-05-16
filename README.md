@@ -1,6 +1,10 @@
 # Petrányi Dominik (HHU7FQ) "Python programozás a gyakorlatban" mandatory assignment
 ## Poker videogame
 
+### About the code:
+Code coverage statistics are available via `.coverage` file
+or `index.html` in `htmlcov` folder.
+
 ### Installation:
 Install the game with the following command:
 ```python

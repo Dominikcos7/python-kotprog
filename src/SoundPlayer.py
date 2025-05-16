@@ -20,7 +20,7 @@ def play_deal_sound() -> None:
 
 
 def play_shuffle_sound() -> None:
-    sound = f"shuffle.mp3"
+    sound = "shuffle.mp3"
     play_sound(sound)
 
 

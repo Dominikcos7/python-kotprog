@@ -8,6 +8,6 @@ class CheckOrCallPlayer(AIPlayer):
     def act(self, highest_bid: int) -> None:
         try:
             self.action_check(highest_bid)
-        except ValueError as e:
+        except ValueError:
             amount = self.get_amount_to_call(highest_bid)
             self.action_call(amount)
