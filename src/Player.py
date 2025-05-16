@@ -33,6 +33,7 @@ class Player:
     def action_call(self, amount: int):
         """
         :param amount: the amount to call
+        :raises ValueError: if `amount` is negative or if the player has no chips left.
         """
 
         if amount <= 0:
@@ -49,6 +50,7 @@ class Player:
     def action_check(self, highest_bid: int):
         """
         :param highest_bid: the highest bid at the table
+        :raises ValueError: if player's chips on table are less than the highest bid.
         """
 
         if self.chips_on_table < highest_bid:
@@ -66,6 +68,10 @@ class Player:
         """
         :param amount: the amount to raise
         :param call_amount: the amount to call on the table
+        :raises ValueError: if `amount` is smaller than `call_amount`,
+        if the player has less chips than `amount`,
+        if the player has less than one chip,
+        if `amount` is less than one.
         """
 
         if amount <= call_amount:
