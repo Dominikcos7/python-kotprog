@@ -51,3 +51,7 @@ ENV/
 # OS specific
 .DS_Store
 Thumbs.db
+
+# Linters
+pylint_result.json
+flake8_result.txt

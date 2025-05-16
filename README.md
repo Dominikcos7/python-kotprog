@@ -4,6 +4,8 @@
 ### About the code:
 Code coverage statistics are available via `.coverage` file
 or `index.html` in `htmlcov` folder.
+Code lint results can be found in `flake8_result.txt` and in `pylint_result.json`
+
 
 ### Installation:
 Install the game with the following command:
