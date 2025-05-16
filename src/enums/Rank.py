@@ -2,6 +2,10 @@ from enum import Enum
 
 
 class Rank(Enum):
+    """
+    Represents the rank (value) of a card in poker.
+    """
+
     ACE = "ace"
     TWO = "two"
     THREE = "three"
@@ -20,6 +24,9 @@ class Rank(Enum):
         return "%s" % self.value
 
     def as_treys_rank(self) -> str:
+        """
+        Returns the rank in a format that Treys library can use.
+        """
         match self:
             case self.TWO:
                 return '2'

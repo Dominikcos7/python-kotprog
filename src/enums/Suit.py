@@ -2,6 +2,10 @@ from enum import Enum
 
 
 class Suit(Enum):
+    """
+    Represents the suit (colour) of a card in poker.
+    """
+
     SPADE = "spade",
     HEART = "heart",
     DIAMOND = "diamond",
@@ -11,6 +15,9 @@ class Suit(Enum):
         return "%s" % self.value
 
     def as_treys_suit(self) -> str:
+        """
+        Returns the suit in a format that Treys library can use.
+        """
         match self:
             case self.SPADE:
                 return 's'
