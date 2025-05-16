@@ -2,14 +2,19 @@ import os
 
 
 def get_package_path():
-    """Returns the path to the installed package."""
+    """
+    Returns the path to the installed package. This is a utility function created because the pip installed game would
+    not find the images and sounds by their relative path.
+    """
+
     return os.path.dirname(os.path.abspath(__file__))
 
 
 def get_resource_path(relative_path):
     """
     Get the absolute path to a resource file, works both when running
-    as a script and when installed as a package.
+    as a script and when installed as a package. This is a utility function created because the pip installed game would
+    not find the images and sounds by their relative path.
 
     Args:
         relative_path (str): The relative path to the resource from the src directory

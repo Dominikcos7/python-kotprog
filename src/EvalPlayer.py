@@ -4,7 +4,18 @@ from src.AIPlayer import AIPlayer
 
 
 class EvalPlayer(AIPlayer):
+    """
+    This class represents an AI player that is capable of evaluating its hand and to make a decision based on that
+    evaluation.
+    """
+
     def __init__(self, name: str, chips: int, player_id: int):
+        """
+        :param name: the name of the player
+        :param chips: the amount of chips the player has
+        :param player_id: the id of the player
+        """
+
         super().__init__(name, chips, player_id)
         self.raise_bar = 15
         self.call_bar = 10
@@ -12,6 +23,15 @@ class EvalPlayer(AIPlayer):
         self.fold_bar = 0
 
     def act(self, highest_bid: int) -> None:
+        """
+        This function is called by the game when a player needs to act (when it's their turn). EvalPlayer uses bars for
+        deciding which action to take. These bars get adjusted by the player's hand's evaluation, and represent
+        probabilities of each action. The player throws a die, then takes an action based on whether the thrown value
+        is over or under each bar.
+
+        :param highest_bid: the highest bid on the table
+        """
+
         hand_eval = self.hand.evaluate()
         if hand_eval < 1500:
             self.align_bars(-14)
@@ -55,6 +75,10 @@ class EvalPlayer(AIPlayer):
         self.reset_bars()
 
     def align_bars(self, amount: int) -> None:
+        """
+        :param amount: the amount to align each bar by (it can be negative)
+        """
+
         self.raise_bar += amount
         self.call_bar += amount
         self.check_bar += amount
