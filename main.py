@@ -14,6 +14,7 @@ from src.renderers.RaiseInfoRenderer import RaiseInfoRenderer
 from src.renderers.RoundWinnerInfoRenderer import RoundWinnerInfoRenderer
 from src.renderers.TableRenderer import TableRenderer
 from src.enums.TableState import TableState
+from src.resource_path import get_resource_path
 
 
 def handle_input(e: pygame.event.Event) -> bool:
@@ -141,7 +142,7 @@ raise_info_renderer = RaiseInfoRenderer(screen)
 round_winner_info_renderer = RoundWinnerInfoRenderer(screen)
 info_renderer = InfoRenderer(screen)
 
-background = pygame.image.load('./src/img/background.jpg')
+background = pygame.image.load(get_resource_path('img/background.jpg'))
 
 players = [HumanPlayer("player", 100, 0)]
 for i in range(1, 8):

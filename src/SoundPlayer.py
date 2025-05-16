@@ -2,7 +2,9 @@ from random import randint
 
 from pygame import mixer
 
-BASE_PATH = './src/sound/'
+from src.resource_path import get_resource_path
+
+BASE_PATH = 'sound/'
 
 
 def play_chips_sound() -> None:
@@ -24,5 +26,6 @@ def play_shuffle_sound() -> None:
 
 def play_sound(sound: str) -> None:
     mixer.init()
-    mixer.music.load(BASE_PATH + sound)
+    path = get_resource_path(BASE_PATH + sound)
+    mixer.music.load(path)
     mixer.music.play()

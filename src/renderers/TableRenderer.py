@@ -2,6 +2,7 @@ import pygame
 from pygame import Surface
 
 from src.renderers.Renderer import Renderer
+from src.resource_path import get_resource_path
 
 
 class TableRenderer(Renderer):
@@ -10,7 +11,7 @@ class TableRenderer(Renderer):
 
     def __init__(self, screen: Surface):
         super().__init__(screen)
-        self.image = pygame.image.load('./src/img/table.png')
+        self.image = pygame.image.load(get_resource_path('img/table.png'))
         w, h = self.image.get_size()
         self.image = pygame.transform.scale(self.image, (w * self.SCALE, h * self.SCALE))
 

@@ -4,6 +4,7 @@ from pygame import Surface
 from src.renderers.PlayerRenderer import PlayerRenderer
 from src.renderers.TableRenderer import TableRenderer
 from src.renderers.TextRenderer import TextRenderer
+from src.resource_path import get_resource_path
 
 
 class ChipRenderer(TextRenderer):
@@ -41,7 +42,7 @@ class ChipRenderer(TextRenderer):
 
     def __init__(self, screen: Surface):
         super().__init__(screen)
-        self.sprite = pygame.image.load('./src/img/chips.png')
+        self.sprite = pygame.image.load(get_resource_path('img/chips.png'))
         w, h = self.sprite.get_size()[0] * self.SCALE, self.sprite.get_size()[1] * self.SCALE
         self.sprite = pygame.transform.scale(self.sprite, (w, h))
         self.chip_width_px = 46 * self.SCALE

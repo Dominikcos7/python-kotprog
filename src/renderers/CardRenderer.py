@@ -7,6 +7,7 @@ from src.renderers.Renderer import Renderer
 from src.renderers.TableRenderer import TableRenderer
 from src.enums.Rank import Rank
 from src.enums.Suit import Suit
+from src.resource_path import get_resource_path
 
 
 class CardRenderer(Renderer):
@@ -47,7 +48,7 @@ class CardRenderer(Renderer):
 
     def __init__(self, screen: Surface):
         super().__init__(screen)
-        self.sprite = pygame.image.load('./src/img/cards.png')
+        self.sprite = pygame.image.load(get_resource_path('img/cards.png'))
 
     def render_card(self, card: Card, position: tuple[float, float], show_cards=True) -> None:
         if show_cards:
