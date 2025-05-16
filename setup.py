@@ -6,7 +6,7 @@ with open('README.md', 'r', encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name="python-kotprog",
+    name="python_kotprog",
     version="0.1.0",
     author="Petrányi Dominik (HHU7FQ)",
     author_email="petranyidominik0@gmail.com",
@@ -32,7 +32,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'python-kotprog=main:main',
+            'python_kotprog=main:main',
         ],
     },
 )
