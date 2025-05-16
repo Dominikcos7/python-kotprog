@@ -1,0 +1,5 @@
+include README.md
+recursive-include src/img *.png
+recursive-include src/img *.jpg
+recursive-include src/img/players *.png
+recursive-include src/sound *.mp3
