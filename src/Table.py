@@ -5,7 +5,16 @@ from src.enums.TableState import TableState
 
 
 class Table:
+    """
+    This class represents a poker table.
+    """
+
     def __init__(self, players: list[Player], blind: int):
+        """
+        :param players: the players sitting at the table
+        :param blind: the blind value of the table
+        """
+
         self.players = players
         self.state = TableState.INIT_ROUND
         self.small_blind = blind // 2
@@ -33,6 +42,10 @@ class Table:
             player.chips_on_table = 0
 
     def deal_community_cards(self, amount: int) -> None:
+        """
+        :param amount: the amount of cards to deal
+        """
+
         cards = [self.deck.draw() for _ in range(amount)]
 
         for card in cards:
@@ -45,6 +58,11 @@ class Table:
             player.hand.add_card(self.deck.draw()).add_card(self.deck.draw())
 
     def enter_state(self, state: TableState) -> None:
+        """
+        :param state: the TableState to enter
+        :raises ValueError: if `state` cannot be entered because of the validations
+        """
+
         match state:
             case TableState.INIT_ROUND:
                 if self.state != TableState.CLOSE_ROUND:
@@ -131,6 +149,10 @@ class Table:
         return True
 
     def enter_next_state(self) -> None:
+        """
+        :raises ValueError: if next state cannot be entered because of the validations.
+        """
+
         if self.state != TableState.INIT_ROUND and self.state != TableState.CLOSE_ROUND:
             not_folded_players = self.get_not_folded_players()
             if len(not_folded_players) <= 1:

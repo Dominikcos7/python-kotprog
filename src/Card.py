@@ -4,7 +4,16 @@ from treys import Card as tCard
 
 
 class Card:
+    """
+    This class represents a poker card.
+    """
+
     def __init__(self, suit: Suit, rank: Rank):
+        """
+        :param suit: the suit (colour) of the card
+        :param rank: the rank (value) of the card
+        """
+
         self._suit = suit
         self._rank = rank
 
@@ -18,6 +27,11 @@ class Card:
         return str(self._rank) + " of " + str(self._suit) + "s"
 
     def as_treys_card(self) -> int:
+        """
+        This function returns the card in a format the Treys library can use.
+        :return: the card in Treys format (which is an integer)
+        """
+
         return tCard.new(self._rank.as_treys_rank() + self._suit.as_treys_suit())
 
     @property

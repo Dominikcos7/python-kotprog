@@ -25,6 +25,10 @@ def play_shuffle_sound() -> None:
 
 
 def play_sound(sound: str) -> None:
+    """
+    :param sound: the sound to play
+    """
+
     mixer.init()
     path = get_resource_path(BASE_PATH + sound)
     mixer.music.load(path)
