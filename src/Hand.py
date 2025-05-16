@@ -1,4 +1,3 @@
-import treys
 from treys import Evaluator
 
 from src import SoundPlayer

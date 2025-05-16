@@ -1,10 +1,6 @@
 from random import randint
 
 from src.AIPlayer import AIPlayer
-from src.Card import Card
-from src.Hand import Hand
-from src.enums.Rank import Rank
-from src.enums.Suit import Suit
 
 
 class EvalPlayer(AIPlayer):

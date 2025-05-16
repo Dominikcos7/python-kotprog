@@ -1,4 +1,3 @@
-import pygame
 from pygame import Surface
 
 from src.renderers.InfoRenderer import InfoRenderer

@@ -1,6 +1,4 @@
 import os
-import sys
-from pathlib import Path
 
 
 def get_package_path():
@@ -21,8 +19,3 @@ def get_resource_path(relative_path):
     """
     package_path = get_package_path()
     return os.path.join(package_path, relative_path)
-
-# Example usage in your code:
-# from src.resource_path import get_resource_path
-# image_path = get_resource_path('img/chips.png')
-# sprite = pygame.image.load(image_path)
