@@ -195,7 +195,10 @@ class Table:
             player.action_fold()
 
     def get_acting_player(self) -> Player:
-        return self.players[self.actor_idx]
+        try:
+            return self.players[self.actor_idx]
+        except IndexError:
+            return self.players[0]
 
     def get_highest_bid(self) -> int:
         players = self.get_not_folded_players()
